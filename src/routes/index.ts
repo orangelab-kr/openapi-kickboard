@@ -1,6 +1,7 @@
 import { InternalError, OPCODE, Wrapper, logger } from '../tools';
 import express, { Router } from 'express';
 
+import InternalMiddleware from '../middlewares/internal';
 import getInternalRouter from './internal';
 import morgan from 'morgan';
 import os from 'os';
@@ -15,7 +16,7 @@ export default function getRouter(): Router {
   router.use(logging);
   router.use(express.json());
   router.use(express.urlencoded({ extended: true }));
-  router.use('/internal', getInternalRouter());
+  router.use('/internal', InternalMiddleware(), getInternalRouter());
   router.get(
     '/',
     Wrapper(async (_req, res) => {

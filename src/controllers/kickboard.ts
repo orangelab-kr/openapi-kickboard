@@ -14,10 +14,10 @@ export default class Kickboard {
 
   public static async init(): Promise<void> {
     this.kickboardService = new KickboardService({
-      hostname: String(process.env.KICKBOARD_SERVICE_HOSTNAME),
-      username: String(process.env.KICKBOARD_SERVICE_USERNAME),
-      password: String(process.env.KICKBOARD_SERVICE_PASSWORD),
-      vhost: String(process.env.KICKBOARD_SERVICE_VHOST),
+      hostname: String(process.env.HIKICK_KICKBOARD_SERVICE_HOSTNAME),
+      username: String(process.env.HIKICK_KICKBOARD_SERVICE_USERNAME),
+      password: String(process.env.HIKICK_KICKBOARD_SERVICE_PASSWORD),
+      vhost: String(process.env.HIKICK_KICKBOARD_SERVICE_VHOST),
     });
 
     await this.kickboardService.connect();
