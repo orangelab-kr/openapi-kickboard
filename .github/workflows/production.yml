@@ -35,7 +35,6 @@ jobs:
           ECR_REPOSITORY: openapi-kickboard
         run: |
           export PACKAGE_VERSION=$(node -p 'require("./package.json").version')
-          echo ${{ steps.login-codeartifact.outputs.CODEARTIFACT_AUTH_TOKEN }}
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION --build-arg CODEARTIFACT_AUTH_TOKEN=${{ steps.login-codeartifact.outputs.CODEARTIFACT_AUTH_TOKEN }} .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
