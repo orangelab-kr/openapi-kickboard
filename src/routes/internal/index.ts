@@ -7,9 +7,13 @@ import InternalKickboardMiddleware from '../../middlewares/internal/kickboard';
 import Kickboard from '../../controllers/kickboard';
 import { Packet } from 'kickboard-sdk';
 import { Router } from 'express';
+import getInternalAlarmRouter from './alarm';
 import getInternalBatteryRouter from './battery';
+import getInternalBluetoothRouter from './bluetooth';
+import getInternalBuzzerRouter from './buzzer';
 import getInternalConfigRouter from './config';
 import getInternalInfoRouter from './info';
+import getInternalLightRouter from './light';
 import getInternalStatusRouter from './status';
 
 export default function getInternalRouter(): Router {
@@ -39,6 +43,80 @@ export default function getInternalRouter(): Router {
     })
   );
 
+  router.get(
+    '/:kickboardId/start',
+    InternalPermissionMiddleware(PERMISSION.ACTION_START),
+    InternalKickboardMiddleware(),
+    Wrapper(async (req, res) => {
+      await Kickboard.start(req.kickboardClient);
+      res.json({ opcode: OPCODE.SUCCESS });
+    })
+  );
+
+  router.get(
+    '/:kickboardId/stop',
+    InternalPermissionMiddleware(PERMISSION.ACTION_STOP),
+    InternalKickboardMiddleware(),
+    Wrapper(async (req, res) => {
+      await Kickboard.stop(req.kickboardClient);
+      res.json({ opcode: OPCODE.SUCCESS });
+    })
+  );
+
+  router.get(
+    '/:kickboardId/lock',
+    InternalPermissionMiddleware(PERMISSION.ACTION_LOCK),
+    InternalKickboardMiddleware(),
+    Wrapper(async (req, res) => {
+      await Kickboard.lock(req.kickboardClient);
+      res.json({ opcode: OPCODE.SUCCESS });
+    })
+  );
+
+  router.get(
+    '/:kickboardId/unlock',
+    InternalPermissionMiddleware(PERMISSION.ACTION_UNLOCK),
+    InternalKickboardMiddleware(),
+    Wrapper(async (req, res) => {
+      await Kickboard.unlock(req.kickboardClient);
+      res.json({ opcode: OPCODE.SUCCESS });
+    })
+  );
+
+  router.get(
+    '/:kickboardId/reboot',
+    InternalPermissionMiddleware(PERMISSION.ACTION_REBOOT),
+    InternalKickboardMiddleware(),
+    Wrapper(async (req, res) => {
+      await Kickboard.reboot(req.kickboardClient);
+      res.json({ opcode: OPCODE.SUCCESS });
+    })
+  );
+
+  router.use(
+    '/:kickboardId/buzzer',
+    InternalKickboardMiddleware(),
+    getInternalBuzzerRouter()
+  );
+
+  router.use(
+    '/:kickboardId/bluetooth',
+    InternalKickboardMiddleware(),
+    getInternalBluetoothRouter()
+  );
+
+  router.use(
+    '/:kickboardId/light',
+    InternalKickboardMiddleware(),
+    getInternalLightRouter()
+  );
+
+  router.use(
+    '/:kickboardId/alarm',
+    InternalKickboardMiddleware(),
+    getInternalAlarmRouter()
+  );
+
   router.use(
     '/:kickboardId/status',
     InternalPermissionMiddleware(PERMISSION.LOOKUP_STATUS),
@@ -52,6 +130,7 @@ export default function getInternalRouter(): Router {
     InternalKickboardMiddleware(),
     getInternalInfoRouter()
   );
+
   router.use(
     '/:kickboardId/config',
     InternalPermissionMiddleware(PERMISSION.LOOKUP_CONFIG),

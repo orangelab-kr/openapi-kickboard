@@ -24,4 +24,16 @@ export default class Battery {
     await kickboard.getBattery();
     return Battery.getBattery(kickboard);
   }
+
+  public static async batteryLock(
+    kickboardClient: KickboardClient
+  ): Promise<void> {
+    kickboardClient.batteryLock();
+  }
+
+  public static async batteryUnlock(
+    kickboardClient: KickboardClient
+  ): Promise<void> {
+    kickboardClient.batteryUnlock();
+  }
 }

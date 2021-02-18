@@ -1,4 +1,5 @@
 import { InternalError, Joi, OPCODE, logger } from '../tools';
+import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import {
   KickboardCollect,
   KickboardDoc,
@@ -7,7 +8,7 @@ import {
   KickboardModel,
 } from '../models';
 
-import { KickboardService } from 'kickboard-sdk';
+import Tried from '../tools/tried';
 
 export default class Kickboard {
   public static kickboardService: KickboardService;
@@ -88,5 +89,25 @@ export default class Kickboard {
     }
 
     return kickboard;
+  }
+
+  public static async start(kickboardClient: KickboardClient): Promise<void> {
+    await Tried(() => kickboardClient.start());
+  }
+
+  public static async stop(kickboardClient: KickboardClient): Promise<void> {
+    await Tried(() => kickboardClient.stop());
+  }
+
+  public static async lock(kickboardClient: KickboardClient): Promise<void> {
+    kickboardClient.lock();
+  }
+
+  public static async unlock(kickboardClient: KickboardClient): Promise<void> {
+    kickboardClient.unlock();
+  }
+
+  public static async reboot(kickboardClient: KickboardClient): Promise<void> {
+    kickboardClient.reboot();
   }
 }
