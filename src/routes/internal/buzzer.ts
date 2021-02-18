@@ -3,7 +3,7 @@ import InternalPermissionMiddleware, {
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
 
-import Buzzer from '../../controllers/buzzer';
+import { Buzzer } from '../../controllers';
 import { Router } from 'express';
 
 export default function getInternalBuzzerRouter(): Router {

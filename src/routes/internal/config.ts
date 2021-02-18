@@ -3,7 +3,7 @@ import InternalPermissionMiddleware, {
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
 
-import Config from '../../controllers/config';
+import { Config } from '../../controllers';
 import { PacketConfig } from 'kickboard-sdk';
 import { Router } from 'express';
 

@@ -5,7 +5,7 @@ import { OPCODE, Wrapper } from '../../tools';
 
 import { PacketStatus } from 'kickboard-sdk';
 import { Router } from 'express';
-import Status from '../../controllers/status';
+import { Status } from '../../controllers';
 
 export default function getInternalStatusRouter(): Router {
   const router = Router();

@@ -12,6 +12,7 @@ export default class MongoDB {
       useFindAndModify: true,
       useUnifiedTopology: true,
       useNewUrlParser: true,
+      useCreateIndex: true,
       sslValidate: false,
       sslCA,
     });

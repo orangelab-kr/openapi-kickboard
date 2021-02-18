@@ -3,7 +3,7 @@ import InternalPermissionMiddleware, {
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
 
-import Light from '../../controllers/light';
+import { Light } from '../../controllers';
 import { Router } from 'express';
 
 export default function getInternalLightRouter(): Router {

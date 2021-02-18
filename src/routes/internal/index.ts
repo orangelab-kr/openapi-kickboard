@@ -4,7 +4,7 @@ import InternalPermissionMiddleware, {
 import { OPCODE, Wrapper } from '../../tools';
 
 import InternalKickboardMiddleware from '../../middlewares/internal/kickboard';
-import Kickboard from '../../controllers/kickboard';
+import { Kickboard } from '../../controllers';
 import { Packet } from 'kickboard-sdk';
 import { Router } from 'express';
 import getInternalAlarmRouter from './alarm';

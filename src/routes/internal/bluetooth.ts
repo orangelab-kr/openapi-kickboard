@@ -3,7 +3,7 @@ import InternalPermissionMiddleware, {
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
 
-import Bluetooth from '../../controllers/bluetooth';
+import { Bluetooth } from '../../controllers';
 import { Router } from 'express';
 
 export default function getInternalBluetoothRouter(): Router {

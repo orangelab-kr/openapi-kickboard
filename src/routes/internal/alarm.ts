@@ -3,7 +3,7 @@ import InternalPermissionMiddleware, {
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
 
-import Alarm from '../../controllers/alarm';
+import { Alarm } from '../../controllers';
 import { Router } from 'express';
 
 export default function getInternalAlarmRouter(): Router {
