@@ -1,4 +1,3 @@
-import { InternalError, Joi, OPCODE, logger } from '../tools';
 import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import {
   KickboardCollect,
@@ -7,7 +6,7 @@ import {
   KickboardMode,
   KickboardModel,
 } from '../models';
-
+import { InternalError, Joi, logger, OPCODE } from '../tools';
 import Tried from '../tools/tried';
 
 export default class Kickboard {
@@ -26,16 +25,16 @@ export default class Kickboard {
   }
 
   public static async getKickboard(
-    kickboardId: string
+    kickboardCode: string
   ): Promise<KickboardDoc | null> {
-    const kickboard = await KickboardModel.findOne({ kickboardId });
+    const kickboard = await KickboardModel.findOne({ kickboardCode });
     return kickboard;
   }
 
   public static async getKickboardOrThrow(
-    kickboardId: string
+    kickboardCode: string
   ): Promise<KickboardDoc> {
-    const kickboard = await Kickboard.getKickboard(kickboardId);
+    const kickboard = await Kickboard.getKickboard(kickboardCode);
     if (!kickboard) {
       throw new InternalError(
         '해당 킥보드를 찾을 수 없습니다.',
@@ -47,23 +46,23 @@ export default class Kickboard {
   }
 
   public static async setKickboard(
-    kickboardId: string,
+    kickboardCode: string,
     props: {
-      kickboardCode: string;
+      kickboardId: string;
       mode?: KickboardMode;
       lost?: KickboardLost;
       collect?: KickboardCollect;
     }
   ): Promise<Kickboard> {
     const schema = Joi.object({
-      kickboardCode: Joi.string().length(6).required(),
+      kickboardId: Joi.string().required(),
       mode: Joi.number().min(0).max(5).optional(),
       lost: Joi.number().min(0).max(3).allow(null).optional(),
       collect: Joi.number().min(0).max(3).allow(null).optional(),
     });
 
-    const beforeKickboard = await Kickboard.getKickboard(kickboardId);
-    const { kickboardCode, mode, lost, collect } = await schema.validateAsync(
+    const beforeKickboard = await Kickboard.getKickboard(kickboardCode);
+    const { kickboardId, mode, lost, collect } = await schema.validateAsync(
       props
     );
 
@@ -83,7 +82,7 @@ export default class Kickboard {
       await KickboardModel.create(data);
     }
 
-    const kickboard = await Kickboard.getKickboard(kickboardId);
+    const kickboard = await Kickboard.getKickboard(kickboardCode);
     if (!kickboard) {
       throw new InternalError('킥보드를 등록 또는 수정할 수 없습니다.');
     }
