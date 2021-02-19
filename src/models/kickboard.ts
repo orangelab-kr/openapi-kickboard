@@ -1,5 +1,4 @@
-import { Document, Schema, model } from 'mongoose';
-
+import { Document, model, Schema } from 'mongoose';
 import { StatusDoc } from './status';
 
 export interface KickboardDoc extends Document {

@@ -1,10 +1,9 @@
+import { Router } from 'express';
+import { Light } from '../../controllers';
 import InternalPermissionMiddleware, {
   PERMISSION,
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
-
-import { Light } from '../../controllers';
-import { Router } from 'express';
 
 export default function getInternalLightRouter(): Router {
   const router = Router();
@@ -13,7 +12,8 @@ export default function getInternalLightRouter(): Router {
     '/on',
     InternalPermissionMiddleware(PERMISSION.ACTION_LIGHT_ON),
     Wrapper(async (req, res) => {
-      await Light.lightOn(req.kickboardClient, req.query);
+      const { kickboardClient } = req.internal;
+      await Light.lightOn(kickboardClient, req.query);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -22,7 +22,8 @@ export default function getInternalLightRouter(): Router {
     '/off',
     InternalPermissionMiddleware(PERMISSION.ACTION_LIGHT_OFF),
     Wrapper(async (req, res) => {
-      await Light.lightOff(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      await Light.lightOff(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );

@@ -1,10 +1,11 @@
-import { InternalError, OPCODE, Wrapper, logger } from '../tools';
 import express, { Router } from 'express';
-
-import InternalMiddleware from '../middlewares/internal';
-import getInternalRouter from './internal';
 import morgan from 'morgan';
 import os from 'os';
+import { Kickboard } from '../controllers';
+import InternalMiddleware from '../middlewares/internal';
+import KickboardMiddleware from '../middlewares/kickboard';
+import { InternalError, logger, OPCODE, Wrapper } from '../tools';
+import getInternalRouter from './internal';
 
 export default function getRouter(): Router {
   const router = Router();
@@ -27,6 +28,24 @@ export default function getRouter(): Router {
         version: process.env.npm_package_version,
         cluster: hostname,
       });
+    })
+  );
+
+  router.get(
+    '/search',
+    Wrapper(async (req, res) => {
+      const { query } = req;
+      const kickboards = await Kickboard.getKickboardsByRadius(query);
+      res.json({ opcode: OPCODE.SUCCESS, kickboards });
+    })
+  );
+
+  router.get(
+    '/:kickboardCode',
+    KickboardMiddleware(),
+    Wrapper(async (req, res) => {
+      const { kickboard } = req;
+      res.json({ opcode: OPCODE.SUCCESS, kickboard });
     })
   );
 

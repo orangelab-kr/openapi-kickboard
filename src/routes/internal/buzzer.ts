@@ -1,10 +1,9 @@
+import { Router } from 'express';
+import { Buzzer } from '../../controllers';
 import InternalPermissionMiddleware, {
   PERMISSION,
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
-
-import { Buzzer } from '../../controllers';
-import { Router } from 'express';
 
 export default function getInternalBuzzerRouter(): Router {
   const router = Router();
@@ -13,7 +12,8 @@ export default function getInternalBuzzerRouter(): Router {
     '/on',
     InternalPermissionMiddleware(PERMISSION.ACTION_BUZZER_ON),
     Wrapper(async (req, res) => {
-      await Buzzer.buzzerOn(req.kickboardClient, req.query);
+      const { kickboardClient } = req.internal;
+      await Buzzer.buzzerOn(kickboardClient, req.query);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -22,7 +22,8 @@ export default function getInternalBuzzerRouter(): Router {
     '/off',
     InternalPermissionMiddleware(PERMISSION.ACTION_BATTERY_UNLOCK),
     Wrapper(async (req, res) => {
-      await Buzzer.buzzerOff(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      await Buzzer.buzzerOff(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );

@@ -13,12 +13,12 @@ export default function InternalKickboardMiddleware(): Callback {
       );
     }
 
-    req.kickboard = await Kickboard.getKickboardOrThrow(
+    req.internal.kickboard = await Kickboard.getKickboardDocOrThrow(
       kickboardCode.toUpperCase()
     );
 
-    req.kickboardClient = kickboardService.getKickboard(
-      req.kickboard.kickboardId
+    req.internal.kickboardClient = kickboardService.getKickboard(
+      req.internal.kickboard.kickboardId
     );
 
     await next();

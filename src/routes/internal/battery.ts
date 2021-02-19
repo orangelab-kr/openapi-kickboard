@@ -1,11 +1,10 @@
+import { Router } from 'express';
+import { PacketBattery } from 'kickboard-sdk';
+import { Battery } from '../../controllers';
 import InternalPermissionMiddleware, {
   PERMISSION,
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
-
-import { Battery } from '../../controllers';
-import { PacketBattery } from 'kickboard-sdk';
-import { Router } from 'express';
 
 export default function getInternalBatteryRouter(): Router {
   const router = Router();
@@ -14,7 +13,8 @@ export default function getInternalBatteryRouter(): Router {
     '/',
     InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
     Wrapper(async (req, res) => {
-      const battery = await Battery.getBattery(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      const battery = await Battery.getBattery(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS, battery });
     })
   );
@@ -23,7 +23,8 @@ export default function getInternalBatteryRouter(): Router {
     '/',
     InternalPermissionMiddleware(PERMISSION.METHOD_REFRESH),
     Wrapper(async (req, res) => {
-      const battery = await Battery.refreshBattery(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      const battery = await Battery.refreshBattery(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS, battery });
     })
   );
@@ -32,7 +33,8 @@ export default function getInternalBatteryRouter(): Router {
     '/lock',
     InternalPermissionMiddleware(PERMISSION.ACTION_BATTERY_LOCK),
     Wrapper(async (req, res) => {
-      await Battery.batteryLock(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      await Battery.batteryLock(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -41,7 +43,8 @@ export default function getInternalBatteryRouter(): Router {
     '/unlock',
     InternalPermissionMiddleware(PERMISSION.ACTION_BATTERY_UNLOCK),
     Wrapper(async (req, res) => {
-      await Battery.batteryUnlock(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      await Battery.batteryUnlock(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -49,7 +52,7 @@ export default function getInternalBatteryRouter(): Router {
   router
     .use(InternalPermissionMiddleware(PERMISSION.METHOD_REALTIME))
     .ws('/', async (ws, req) => {
-      const { kickboardClient } = req;
+      const { kickboardClient } = req.internal;
       const subscribe = await kickboardClient.createSubscribe();
       subscribe.on('battery', (packet: PacketBattery) => {
         ws.send(JSON.stringify(packet));

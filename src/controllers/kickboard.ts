@@ -7,7 +7,20 @@ import {
   KickboardModel,
 } from '../models';
 import { InternalError, Joi, logger, OPCODE } from '../tools';
+import Geo from '../tools/geo';
 import Tried from '../tools/tried';
+
+export interface KickboardShort {
+  kickboardCode: string;
+  lost: number;
+  status: {
+    power: { scooter: { battery: number } };
+    gps: {
+      latitude: number;
+      longitude: number;
+    };
+  };
+}
 
 export default class Kickboard {
   public static kickboardService: KickboardService;
@@ -26,15 +39,94 @@ export default class Kickboard {
 
   public static async getKickboard(
     kickboardCode: string
+  ): Promise<KickboardShort> {
+    const kickboard = await KickboardModel.aggregate([
+      { $match: { mode: 0, kickboardCode } },
+      {
+        $lookup: {
+          from: 'status',
+          localField: 'status',
+          foreignField: '_id',
+          as: 'status',
+        },
+      },
+      { $unwind: '$status' },
+      {
+        $project: {
+          _id: 0,
+          kickboardCode: 1,
+          lost: 1,
+          'status.power.scooter.battery': 1,
+          'status.gps.latitude': 1,
+          'status.gps.longitude': 1,
+        },
+      },
+    ]);
+
+    if (kickboard.length <= 0) {
+      throw new InternalError(
+        '해당 킥보드를 찾을 수 없습니다.',
+        OPCODE.NOT_FOUND
+      );
+    }
+
+    return kickboard[0];
+  }
+
+  public static async getKickboardsByRadius(props: {
+    lat?: number;
+    lng?: number;
+  }): Promise<KickboardShort[]> {
+    const schema = Joi.object({
+      lat: Joi.number().min(-90).max(90).required(),
+      lng: Joi.number().min(-180).max(180).required(),
+    });
+
+    const location = await schema.validateAsync(props);
+    const { low, high } = Geo.getRect(location);
+    const kickboards = await KickboardModel.aggregate([
+      { $match: { mode: 0 } },
+      {
+        $lookup: {
+          from: 'status',
+          localField: 'status',
+          foreignField: '_id',
+          as: 'status',
+        },
+      },
+      { $unwind: '$status' },
+      {
+        $match: {
+          'status.gps.latitude': { $gte: low.lat, $lte: high.lat },
+          'status.gps.longitude': { $gte: low.lng, $lte: high.lng },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          kickboardCode: 1,
+          lost: 1,
+          'status.power.scooter.battery': 1,
+          'status.gps.latitude': 1,
+          'status.gps.longitude': 1,
+        },
+      },
+    ]);
+
+    return kickboards;
+  }
+
+  public static async getKickboardDoc(
+    kickboardCode: string
   ): Promise<KickboardDoc | null> {
     const kickboard = await KickboardModel.findOne({ kickboardCode });
     return kickboard;
   }
 
-  public static async getKickboardOrThrow(
+  public static async getKickboardDocOrThrow(
     kickboardCode: string
   ): Promise<KickboardDoc> {
-    const kickboard = await Kickboard.getKickboard(kickboardCode);
+    const kickboard = await Kickboard.getKickboardDoc(kickboardCode);
     if (!kickboard) {
       throw new InternalError(
         '해당 킥보드를 찾을 수 없습니다.',
@@ -61,11 +153,12 @@ export default class Kickboard {
       collect: Joi.number().min(0).max(3).allow(null).optional(),
     });
 
-    const beforeKickboard = await Kickboard.getKickboard(kickboardCode);
-    const { kickboardId, mode, lost, collect } = await schema.validateAsync(
-      props
-    );
+    const [beforeKickboard, obj] = await Promise.all([
+      Kickboard.getKickboardDocOrThrow(kickboardCode),
+      schema.validateAsync(props),
+    ]);
 
+    const { kickboardId, mode, lost, collect } = obj;
     const where = { kickboardId };
     const data: any = {
       kickboardId,
@@ -82,7 +175,7 @@ export default class Kickboard {
       await KickboardModel.create(data);
     }
 
-    const kickboard = await Kickboard.getKickboard(kickboardCode);
+    const kickboard = await Kickboard.getKickboardDoc(kickboardCode);
     if (!kickboard) {
       throw new InternalError('킥보드를 등록 또는 수정할 수 없습니다.');
     }

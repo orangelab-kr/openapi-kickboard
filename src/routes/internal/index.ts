@@ -24,7 +24,7 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
-      const { kickboard } = req;
+      const { kickboard } = req.internal;
       res.json({ opcode: OPCODE.SUCCESS, kickboard });
     })
   );
@@ -47,7 +47,8 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.ACTION_START),
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
-      await Kickboard.start(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      await Kickboard.start(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -57,7 +58,8 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.ACTION_STOP),
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
-      await Kickboard.stop(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      await Kickboard.stop(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -67,7 +69,8 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.ACTION_LOCK),
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
-      await Kickboard.lock(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      await Kickboard.lock(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -77,7 +80,8 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.ACTION_UNLOCK),
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
-      await Kickboard.unlock(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      await Kickboard.unlock(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -87,7 +91,8 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.ACTION_REBOOT),
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
-      await Kickboard.reboot(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      await Kickboard.reboot(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -149,7 +154,7 @@ export default function getInternalRouter(): Router {
     .use(InternalPermissionMiddleware(PERMISSION.METHOD_REALTIME))
     .use(InternalKickboardMiddleware())
     .ws('/:kickboardCode', async (ws, req) => {
-      const { kickboardClient } = req;
+      const { kickboardClient } = req.internal;
       const subscribe = await kickboardClient.createSubscribe();
       subscribe.on('all', (packet: Packet) => {
         ws.send(JSON.stringify(packet));

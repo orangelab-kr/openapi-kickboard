@@ -1,11 +1,10 @@
+import { Router } from 'express';
+import { PacketConfig } from 'kickboard-sdk';
+import { Config } from '../../controllers';
 import InternalPermissionMiddleware, {
   PERMISSION,
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
-
-import { Config } from '../../controllers';
-import { PacketConfig } from 'kickboard-sdk';
-import { Router } from 'express';
 
 export default function getInternalConfigRouter(): Router {
   const router = Router();
@@ -14,7 +13,8 @@ export default function getInternalConfigRouter(): Router {
     '/',
     InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
     Wrapper(async (req, res) => {
-      const config = await Config.getConfig(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      const config = await Config.getConfig(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS, config });
     })
   );
@@ -23,7 +23,8 @@ export default function getInternalConfigRouter(): Router {
     '/',
     InternalPermissionMiddleware(PERMISSION.METHOD_REFRESH),
     Wrapper(async (req, res) => {
-      const config = await Config.refreshConfig(req.kickboardClient);
+      const { kickboardClient } = req.internal;
+      const config = await Config.refreshConfig(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS, config });
     })
   );
@@ -31,7 +32,7 @@ export default function getInternalConfigRouter(): Router {
   router
     .use(InternalPermissionMiddleware(PERMISSION.METHOD_REALTIME))
     .ws('/', async (ws, req) => {
-      const { kickboardClient } = req;
+      const { kickboardClient } = req.internal;
       const subscribe = await kickboardClient.createSubscribe();
       subscribe.on('config', (packet: PacketConfig) => {
         ws.send(JSON.stringify(packet));
