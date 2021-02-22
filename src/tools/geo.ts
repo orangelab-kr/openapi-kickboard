@@ -1,13 +1,11 @@
 import { S2LatLng, S2LatLngRect } from 'nodes2ts';
 
 export default class Geo {
-  public static getRect(
-    props: {
-      lat: number;
-      lng: number;
-    },
-    radius = 1000
-  ): {
+  public static getRect(props: {
+    lat: number;
+    lng: number;
+    radius: number;
+  }): {
     low: { lat: number; lng: number };
     high: { lat: number; lng: number };
   } {
@@ -25,9 +23,9 @@ export default class Geo {
     );
 
     const latForRadius =
-      radius / centerLatLng.getEarthDistance(latReferenceLatLng);
+      props.radius / centerLatLng.getEarthDistance(latReferenceLatLng);
     const lngForRadius =
-      radius / centerLatLng.getEarthDistance(lngReferenceLatLng);
+      props.radius / centerLatLng.getEarthDistance(lngReferenceLatLng);
 
     const minLatLng = S2LatLng.fromDegrees(
       props.lat - latForRadius,

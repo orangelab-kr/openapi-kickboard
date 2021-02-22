@@ -1,3 +1,4 @@
+import { InternalError, Joi, OPCODE, logger } from '../tools';
 import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import {
   KickboardCollect,
@@ -6,7 +7,7 @@ import {
   KickboardMode,
   KickboardModel,
 } from '../models';
-import { InternalError, Joi, logger, OPCODE } from '../tools';
+
 import Geo from '../tools/geo';
 import Tried from '../tools/tried';
 
@@ -80,6 +81,7 @@ export default class Kickboard {
     const schema = Joi.object({
       lat: Joi.number().min(-90).max(90).required(),
       lng: Joi.number().min(-180).max(180).required(),
+      radius: Joi.number().min(10).max(5000).default(1000).required(),
     });
 
     const location = await schema.validateAsync(props);

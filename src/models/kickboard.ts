@@ -1,4 +1,5 @@
-import { Document, model, Schema } from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
+
 import { StatusDoc } from './status';
 
 export interface KickboardDoc extends Document {
@@ -45,7 +46,7 @@ export const KickboardSchema = new Schema(
       default: KickboardMode.UNREGISTERED,
       required: true,
     },
-    lost: { type: Number, enum: KickboardLost, default: null, required: false },
+    lost: { type: Number, enum: KickboardLost, default: null, required: true },
     collect: {
       type: Number,
       enum: KickboardCollect,
