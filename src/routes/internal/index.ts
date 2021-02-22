@@ -1,11 +1,12 @@
-import { Router } from 'express';
-import { Packet } from 'kickboard-sdk';
-import { Kickboard } from '../../controllers';
-import InternalKickboardMiddleware from '../../middlewares/internal/kickboard';
 import InternalPermissionMiddleware, {
   PERMISSION,
 } from '../../middlewares/internal/permissions';
 import { OPCODE, Wrapper } from '../../tools';
+
+import InternalKickboardMiddleware from '../../middlewares/internal/kickboard';
+import { Kickboard } from '../../controllers';
+import { Packet } from 'kickboard-sdk';
+import { Router } from 'express';
 import getInternalAlarmRouter from './alarm';
 import getInternalBatteryRouter from './battery';
 import getInternalBluetoothRouter from './bluetooth';
@@ -17,6 +18,15 @@ import getInternalStatusRouter from './status';
 
 export default function getInternalRouter(): Router {
   const router = Router();
+
+  router.get(
+    '/search',
+    Wrapper(async (req, res) => {
+      const { query } = req;
+      const kickboards = await Kickboard.getKickboardsByRadius(query, true);
+      res.json({ opcode: OPCODE.SUCCESS, kickboards });
+    })
+  );
 
   router.get(
     '/:kickboardCode',

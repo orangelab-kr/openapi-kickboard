@@ -7,6 +7,13 @@ import {
   KickboardMode,
   KickboardModel,
 } from '../models';
+import {
+  KickboardQueryKickboardCode,
+  KickboardQueryLookupStatus,
+  KickboardQueryMode,
+  KickboardQueryRadiusLocation,
+  KickboardQueryToShort,
+} from '../queries/kickboard';
 
 import Geo from '../tools/geo';
 import Tried from '../tools/tried';
@@ -38,32 +45,19 @@ export default class Kickboard {
     logger.info('[Kickboard] 킥보드 서비스와 연결되었습니다.');
   }
 
-  public static async getKickboard(
-    kickboardCode: string
-  ): Promise<KickboardShort> {
-    const kickboard = await KickboardModel.aggregate([
-      { $match: { mode: 0, kickboardCode } },
-      {
-        $lookup: {
-          from: 'status',
-          localField: 'status',
-          foreignField: '_id',
-          as: 'status',
-        },
-      },
-      { $unwind: '$status' },
-      {
-        $project: {
-          _id: 0,
-          kickboardCode: 1,
-          lost: 1,
-          'status.power.scooter.battery': 1,
-          'status.gps.latitude': 1,
-          'status.gps.longitude': 1,
-        },
-      },
-    ]);
+  public static async getKickboard<T extends true | false>(
+    kickboardCode: string,
+    details: T
+  ): Promise<T extends true ? Kickboard : KickboardShort> {
+    const query: any = [
+      ...KickboardQueryMode(KickboardMode.READY),
+      ...KickboardQueryKickboardCode(kickboardCode),
+      ...KickboardQueryLookupStatus(),
+    ];
 
+    if (!details) query.push(...KickboardQueryToShort());
+    console.log(query);
+    const kickboard = await KickboardModel.aggregate(query);
     if (kickboard.length <= 0) {
       throw new InternalError(
         '해당 킥보드를 찾을 수 없습니다.',
@@ -74,10 +68,13 @@ export default class Kickboard {
     return kickboard[0];
   }
 
-  public static async getKickboardsByRadius(props: {
-    lat?: number;
-    lng?: number;
-  }): Promise<KickboardShort[]> {
+  public static async getKickboardsByRadius<T extends true | false>(
+    props: {
+      lat?: number;
+      lng?: number;
+    },
+    details: T
+  ): Promise<(T extends true ? Kickboard : KickboardShort)[]> {
     const schema = Joi.object({
       lat: Joi.number().min(-90).max(90).required(),
       lng: Joi.number().min(-180).max(180).required(),
@@ -86,34 +83,14 @@ export default class Kickboard {
 
     const location = await schema.validateAsync(props);
     const { low, high } = Geo.getRect(location);
-    const kickboards = await KickboardModel.aggregate([
-      { $match: { mode: 0 } },
-      {
-        $lookup: {
-          from: 'status',
-          localField: 'status',
-          foreignField: '_id',
-          as: 'status',
-        },
-      },
-      { $unwind: '$status' },
-      {
-        $match: {
-          'status.gps.latitude': { $gte: low.lat, $lte: high.lat },
-          'status.gps.longitude': { $gte: low.lng, $lte: high.lng },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          kickboardCode: 1,
-          lost: 1,
-          'status.power.scooter.battery': 1,
-          'status.gps.latitude': 1,
-          'status.gps.longitude': 1,
-        },
-      },
-    ]);
+    const query: any = [
+      ...KickboardQueryMode(KickboardMode.READY),
+      ...KickboardQueryLookupStatus(),
+      ...KickboardQueryRadiusLocation(low, high),
+    ];
+
+    if (!details) query.push(...KickboardQueryToShort());
+    const kickboards = await KickboardModel.aggregate(query);
 
     return kickboards;
   }

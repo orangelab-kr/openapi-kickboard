@@ -1,6 +1,7 @@
-import Kickboard from '../../controllers/kickboard';
 import { InternalError, OPCODE } from '../../tools';
 import Wrapper, { Callback } from '../../tools/wrapper';
+
+import Kickboard from '../../controllers/kickboard';
 
 export default function InternalKickboardMiddleware(): Callback {
   const { kickboardService } = Kickboard;
@@ -13,14 +14,11 @@ export default function InternalKickboardMiddleware(): Callback {
       );
     }
 
-    req.internal.kickboard = await Kickboard.getKickboardDocOrThrow(
-      kickboardCode.toUpperCase()
-    );
+    const code = kickboardCode.toUpperCase();
+    req.internal.kickboard = await Kickboard.getKickboardDocOrThrow(code);
 
-    req.internal.kickboardClient = kickboardService.getKickboard(
-      req.internal.kickboard.kickboardId
-    );
-
+    const { kickboardId } = req.internal.kickboard;
+    req.internal.kickboardClient = kickboardService.getKickboard(kickboardId);
     await next();
   });
 }
