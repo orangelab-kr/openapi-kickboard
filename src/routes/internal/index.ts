@@ -20,7 +20,22 @@ export default function getInternalRouter(): Router {
   const router = Router();
 
   router.get(
-    '/search',
+    '/',
+    InternalPermissionMiddleware(PERMISSION.LOOKUP),
+    InternalPermissionMiddleware(PERMISSION.SEARCH_LIST),
+    InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
+    Wrapper(async (req, res) => {
+      const { query } = req;
+      const kickboards = await Kickboard.getKickboardDocs(query);
+      res.json({ opcode: OPCODE.SUCCESS, kickboards });
+    })
+  );
+
+  router.get(
+    '/near',
+    InternalPermissionMiddleware(PERMISSION.LOOKUP),
+    InternalPermissionMiddleware(PERMISSION.SEARCH_NEAR),
+    InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
     Wrapper(async (req, res) => {
       const { query } = req;
       const kickboards = await Kickboard.getKickboardsByRadius(query, true);

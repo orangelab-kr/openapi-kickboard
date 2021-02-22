@@ -56,7 +56,6 @@ export default class Kickboard {
     ];
 
     if (!details) query.push(...KickboardQueryToShort());
-    console.log(query);
     const kickboard = await KickboardModel.aggregate(query);
     if (kickboard.length <= 0) {
       throw new InternalError(
@@ -114,6 +113,29 @@ export default class Kickboard {
     }
 
     return kickboard;
+  }
+
+  public static async getKickboardDocs(props: {
+    take?: number;
+    skip?: number;
+    search?: number;
+  }): Promise<KickboardDoc[]> {
+    const schema = Joi.object({
+      take: Joi.number().default(10).optional(),
+      skip: Joi.number().default(0).optional(),
+      search: Joi.string().default('').allow('').optional(),
+    });
+
+    const { take, skip, search } = await schema.validateAsync(props);
+    const $regex = new RegExp(search);
+
+    const kickboards = await KickboardModel.find({
+      $or: [{ kickboardId: { $regex } }, { kickboardCode: { $regex } }],
+    })
+      .limit(take)
+      .skip(skip);
+
+    return kickboards;
   }
 
   public static async setKickboard(

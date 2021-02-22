@@ -33,7 +33,7 @@ export default function getRouter(): Router {
   );
 
   router.get(
-    '/search',
+    '/near',
     Wrapper(async (req, res) => {
       const { query } = req;
       const kickboards = await Kickboard.getKickboardsByRadius(query, false);
