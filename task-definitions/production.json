@@ -14,7 +14,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/openapi-kickboard",
+          "awslogs-group": "/ecs/prod-openapi-kickboard",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         }
