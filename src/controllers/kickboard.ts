@@ -45,6 +45,13 @@ export default class Kickboard {
     logger.info('[Kickboard] 킥보드 서비스와 연결되었습니다.');
   }
 
+  public static async getKickboardDocById(
+    kickboardId: string
+  ): Promise<KickboardDoc | null> {
+    const kickboard = await KickboardModel.findOne({ kickboardId });
+    return kickboard;
+  }
+
   public static async getKickboard<T extends true | false>(
     kickboardCode: string,
     details: T
@@ -154,12 +161,20 @@ export default class Kickboard {
       collect: Joi.number().min(0).max(3).allow(null).optional(),
     });
 
-    const [beforeKickboard, obj] = await Promise.all([
-      Kickboard.getKickboardDocOrThrow(kickboardCode),
-      schema.validateAsync(props),
+    const obj = await schema.validateAsync(props);
+    const { kickboardId, mode, lost, collect } = obj;
+    const [beforeKickboard, hasKickboardId] = await Promise.all([
+      Kickboard.getKickboardDoc(kickboardCode),
+      Kickboard.getKickboardDocById(kickboardId),
     ]);
 
-    const { kickboardId, mode, lost, collect } = obj;
+    if (hasKickboardId) {
+      throw new InternalError(
+        `${kickboardId} 킥보드는 이미 ${hasKickboardId.kickboardCode}가 사용하고 있습니다.`,
+        OPCODE.ALREADY_EXISTS
+      );
+    }
+
     const where = { kickboardId };
     const data: any = {
       kickboardId,
@@ -169,7 +184,6 @@ export default class Kickboard {
     if (mode !== undefined) data.mode = mode;
     if (lost !== undefined) data.lost = lost;
     if (collect !== undefined) data.collect = collect;
-
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
     } else {

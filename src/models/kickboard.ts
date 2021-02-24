@@ -46,7 +46,7 @@ export const KickboardSchema = new Schema(
       default: KickboardMode.UNREGISTERED,
       required: true,
     },
-    lost: { type: Number, enum: KickboardLost, default: null, required: true },
+    lost: { type: Number, enum: KickboardLost, default: null, required: false },
     collect: {
       type: Number,
       enum: KickboardCollect,
