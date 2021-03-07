@@ -65,7 +65,7 @@ export const StatusPowerSchema = new Schema({
 
 export const StatusSchema = new Schema(
   {
-    kickboardId: { type: String, required: true },
+    kickboardId: { type: String, index: true, required: true },
     timestamp: { type: String, required: false },
     messageNumber: { type: Number, required: false },
     gps: { type: StatusGpsSchema, required: false },
