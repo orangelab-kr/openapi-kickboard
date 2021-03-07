@@ -10,7 +10,7 @@ declare global {
         sub: string;
         iss: string;
         aud: string;
-        prs: string[];
+        prs: boolean[];
         kickboard: KickboardDoc;
         kickboardClient: KickboardClient;
         iat: Date;

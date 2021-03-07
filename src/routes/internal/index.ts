@@ -21,7 +21,7 @@ export default function getInternalRouter(): Router {
 
   router.get(
     '/',
-    InternalPermissionMiddleware(PERMISSION.LOOKUP),
+    InternalPermissionMiddleware(PERMISSION.LOOKUP_DETAIL),
     InternalPermissionMiddleware(PERMISSION.SEARCH_LIST),
     InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
     Wrapper(async (req, res) => {
@@ -33,7 +33,7 @@ export default function getInternalRouter(): Router {
 
   router.get(
     '/near',
-    InternalPermissionMiddleware(PERMISSION.LOOKUP),
+    InternalPermissionMiddleware(PERMISSION.LOOKUP_DETAIL),
     InternalPermissionMiddleware(PERMISSION.SEARCH_NEAR),
     InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
     Wrapper(async (req, res) => {
@@ -45,7 +45,7 @@ export default function getInternalRouter(): Router {
 
   router.get(
     '/:kickboardCode',
-    InternalPermissionMiddleware(PERMISSION.LOOKUP),
+    InternalPermissionMiddleware(PERMISSION.LOOKUP_DETAIL),
     InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
@@ -175,7 +175,7 @@ export default function getInternalRouter(): Router {
   );
 
   router
-    .use(InternalPermissionMiddleware(PERMISSION.LOOKUP))
+    .use(InternalPermissionMiddleware(PERMISSION.LOOKUP_DETAIL))
     .use(InternalPermissionMiddleware(PERMISSION.METHOD_REALTIME))
     .use(InternalKickboardMiddleware())
     .ws('/:kickboardCode', async (ws, req) => {

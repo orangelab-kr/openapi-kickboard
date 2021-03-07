@@ -35,7 +35,7 @@ export default function InternalMiddleware(): Callback {
         sub: Joi.string().valid('openapi-kickboard').required(),
         iss: Joi.string().hostname().required(),
         aud: Joi.string().email().required(),
-        prs: Joi.array().items(Joi.string()).required(),
+        prs: Joi.string().required(),
         iat: Joi.date().timestamp().required(),
         exp: Joi.date().timestamp().required(),
       });
@@ -43,8 +43,15 @@ export default function InternalMiddleware(): Callback {
       const payload = await schema.validateAsync(data);
       const iat = moment(payload.iat);
       const exp = moment(payload.exp);
+      const prs = parseInt(payload.prs, 36)
+        .toString(2)
+        .padStart(128, '0')
+        .split('')
+        .reverse()
+        .map((v) => v === '1');
 
       req.internal = payload;
+      req.internal.prs = prs;
       if (exp.diff(iat, 'hours') > 6) throw Error();
       logger.info(
         `[Internal] [${payload.iss}] ${payload.aud} - ${req.method} ${req.originalUrl}`
