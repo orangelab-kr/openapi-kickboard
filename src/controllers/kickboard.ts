@@ -15,7 +15,7 @@ import {
   KickboardQueryToShort,
 } from '../queries/kickboard';
 
-import Geo from '../tools/geo';
+import Geo from '../tools/geometry';
 import Tried from '../tools/tried';
 
 export interface KickboardShort {
@@ -57,7 +57,6 @@ export default class Kickboard {
     details: T
   ): Promise<T extends true ? Kickboard : KickboardShort> {
     const query: any = [
-      ...KickboardQueryMode(KickboardMode.READY),
       ...KickboardQueryKickboardCode(kickboardCode),
       ...KickboardQueryLookupStatus(),
     ];
@@ -74,31 +73,36 @@ export default class Kickboard {
     return kickboard[0];
   }
 
-  public static async getKickboardsByRadius<T extends true | false>(
+  public static async getNearKickboards<T extends true | false>(
     props: {
       lat?: number;
       lng?: number;
+      radius?: number;
+      status?: KickboardMode[];
     },
     details: T
-  ): Promise<(T extends true ? Kickboard : KickboardShort)[]> {
+  ): Promise<{
+    total: number;
+    kickboards: (T extends true ? Kickboard : KickboardShort)[];
+  }> {
     const schema = Joi.object({
       lat: Joi.number().min(-90).max(90).required(),
       lng: Joi.number().min(-180).max(180).required(),
+      status: Joi.array().items(Joi.number().required()).optional(),
       radius: Joi.number().min(10).max(5000).default(1000).required(),
     });
 
-    const location = await schema.validateAsync(props);
-    const { low, high } = Geo.getRect(location);
-    const query: any = [
-      ...KickboardQueryMode(KickboardMode.READY),
-      ...KickboardQueryLookupStatus(),
-      ...KickboardQueryRadiusLocation(low, high),
-    ];
-
+    const query: any = [];
+    const { lat, lng, radius, status } = await schema.validateAsync(props);
+    const { low, high } = Geo.getRect({ lat, lng, radius });
+    if (status) query.push(...KickboardQueryMode(...status));
+    query.push(...KickboardQueryLookupStatus());
+    query.push(...KickboardQueryRadiusLocation(low, high));
     if (!details) query.push(...KickboardQueryToShort());
     const kickboards = await KickboardModel.aggregate(query);
+    const total = kickboards.length;
 
-    return kickboards;
+    return { total, kickboards };
   }
 
   public static async getKickboardDoc(
@@ -126,7 +130,7 @@ export default class Kickboard {
     take?: number;
     skip?: number;
     search?: number;
-  }): Promise<KickboardDoc[]> {
+  }): Promise<{ total: number; kickboards: KickboardDoc[] }> {
     const schema = Joi.object({
       take: Joi.number().default(10).optional(),
       skip: Joi.number().default(0).optional(),
@@ -135,14 +139,16 @@ export default class Kickboard {
 
     const { take, skip, search } = await schema.validateAsync(props);
     const $regex = new RegExp(search);
-
-    const kickboards = await KickboardModel.find({
+    const where = {
       $or: [{ kickboardId: { $regex } }, { kickboardCode: { $regex } }],
-    })
-      .limit(take)
-      .skip(skip);
+    };
 
-    return kickboards;
+    const [total, kickboards] = await Promise.all([
+      KickboardModel.count(where),
+      KickboardModel.find(where).limit(take).skip(skip),
+    ]);
+
+    return { total, kickboards };
   }
 
   public static async setKickboard(
@@ -163,19 +169,22 @@ export default class Kickboard {
 
     const obj = await schema.validateAsync(props);
     const { kickboardId, mode, lost, collect } = obj;
-    const [beforeKickboard, hasKickboardId] = await Promise.all([
-      Kickboard.getKickboardDoc(kickboardCode),
-      Kickboard.getKickboardDocById(kickboardId),
-    ]);
-
-    if (hasKickboardId) {
-      throw new InternalError(
-        `${kickboardId} 킥보드는 이미 ${hasKickboardId.kickboardCode}가 사용하고 있습니다.`,
-        OPCODE.ALREADY_EXISTS
-      );
+    const beforeKickboard = await Kickboard.getKickboardDoc(kickboardCode);
+    if (
+      kickboardId &&
+      beforeKickboard &&
+      kickboardId !== beforeKickboard.kickboardId
+    ) {
+      const hasKickboardId = await Kickboard.getKickboardDocById(kickboardId);
+      if (hasKickboardId) {
+        throw new InternalError(
+          `${kickboardId} 킥보드는 이미 ${hasKickboardId.kickboardCode}가 사용하고 있습니다.`,
+          OPCODE.ALREADY_EXISTS
+        );
+      }
     }
 
-    const where = { kickboardId };
+    const where = { kickboardCode };
     const data: any = {
       kickboardId,
       kickboardCode,

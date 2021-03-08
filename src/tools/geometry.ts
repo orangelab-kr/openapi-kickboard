@@ -1,6 +1,6 @@
 import { S2LatLng, S2LatLngRect } from 'nodes2ts';
 
-export default class Geo {
+export default class Geometry {
   public static getRect(props: {
     lat: number;
     lng: number;
