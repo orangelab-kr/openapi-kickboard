@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { KickboardMode } from '../models';
 
-export const KickboardQueryMode = (mode: KickboardMode) => [
-  { $match: { mode } },
+export const KickboardQueryMode = (...mode: KickboardMode[]) => [
+  { $match: { mode: { $in: mode } } },
 ];
 
 export const KickboardQueryKickboardCode = (kickboardCode: string) => [
@@ -45,3 +45,5 @@ export const KickboardQueryToShort = () => [
     },
   },
 ];
+
+export const KickboardQueryCount = () => [{ $count: 'total' }];

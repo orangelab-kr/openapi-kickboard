@@ -4,6 +4,7 @@ import express, { Router } from 'express';
 import InternalMiddleware from '../middlewares/internal';
 import { Kickboard } from '../controllers';
 import KickboardMiddleware from '../middlewares/kickboard';
+import { KickboardMode } from '../models';
 import getInternalRouter from './internal';
 import morgan from 'morgan';
 import os from 'os';
@@ -36,8 +37,12 @@ export default function getRouter(): Router {
     '/near',
     Wrapper(async (req, res) => {
       const { query } = req;
-      const kickboards = await Kickboard.getKickboardsByRadius(query, false);
-      res.json({ opcode: OPCODE.SUCCESS, kickboards });
+      const { total, kickboards } = await Kickboard.getNearKickboards(
+        { ...query, status: [KickboardMode.READY] },
+        false
+      );
+
+      res.json({ opcode: OPCODE.SUCCESS, kickboards, total });
     })
   );
 

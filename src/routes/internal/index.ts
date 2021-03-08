@@ -26,8 +26,8 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
     Wrapper(async (req, res) => {
       const { query } = req;
-      const kickboards = await Kickboard.getKickboardDocs(query);
-      res.json({ opcode: OPCODE.SUCCESS, kickboards });
+      const { total, kickboards } = await Kickboard.getKickboardDocs(query);
+      res.json({ opcode: OPCODE.SUCCESS, kickboards, total });
     })
   );
 
@@ -38,8 +38,12 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
     Wrapper(async (req, res) => {
       const { query } = req;
-      const kickboards = await Kickboard.getKickboardsByRadius(query, true);
-      res.json({ opcode: OPCODE.SUCCESS, kickboards });
+      const { total, kickboards } = await Kickboard.getNearKickboards(
+        query,
+        true
+      );
+
+      res.json({ opcode: OPCODE.SUCCESS, kickboards, total });
     })
   );
 
