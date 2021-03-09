@@ -5,8 +5,9 @@ import express from 'express';
 import expressWs from 'express-ws';
 import getRouter from './routes';
 import logger from './tools/logger';
-
-if (process.env.NODE_ENV === 'dev') dotenv.config();
+if (process.env.NODE_ENV === 'dev') {
+  dotenv.config({ path: '.env.dev' });
+}
 
 async function main() {
   logger.info('[System] 시스템을 활성화하고 있습니다.');

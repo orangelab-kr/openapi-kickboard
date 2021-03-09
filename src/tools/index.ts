@@ -5,4 +5,5 @@ export { default as logger } from './logger';
 export { default as MongoDB } from './mongodb';
 export { default as OPCODE } from './opcode';
 export { default as Tried } from './tried';
+export * from './wrapper';
 export { default as Wrapper } from './wrapper';
