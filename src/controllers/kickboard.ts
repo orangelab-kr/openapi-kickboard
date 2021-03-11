@@ -160,6 +160,7 @@ export default class Kickboard {
       collect?: KickboardCollect;
     }
   ): Promise<Kickboard> {
+    kickboardCode = kickboardCode.toUpperCase();
     const schema = Joi.object({
       kickboardId: Joi.string().required(),
       mode: Joi.number().min(0).max(5).optional(),
