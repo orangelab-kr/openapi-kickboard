@@ -1,4 +1,4 @@
-import { InternalError, Joi, OPCODE, logger } from '../tools';
+import { InternalClient, InternalError, Joi, OPCODE, logger } from '../tools';
 import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import {
   KickboardCollect,
@@ -15,6 +15,7 @@ import {
   KickboardQueryToShort,
 } from '../queries/kickboard';
 
+import { FranchisePermission } from 'openapi-internal-sdk';
 import Geo from '../tools/geometry';
 import Tried from '../tools/tried';
 
@@ -158,18 +159,20 @@ export default class Kickboard {
       mode?: KickboardMode;
       lost?: KickboardLost;
       collect?: KickboardCollect;
-    }
+    },
+    email: string
   ): Promise<Kickboard> {
     kickboardCode = kickboardCode.toUpperCase();
     const schema = Joi.object({
       kickboardId: Joi.string().required(),
+      franchiseId: Joi.string().uuid().required(),
       mode: Joi.number().min(0).max(5).optional(),
       lost: Joi.number().min(0).max(3).allow(null).optional(),
       collect: Joi.number().min(0).max(3).allow(null).optional(),
     });
 
     const obj = await schema.validateAsync(props);
-    const { kickboardId, mode, lost, collect } = obj;
+    const { kickboardId, franchiseId, mode, lost, collect } = obj;
     const beforeKickboard = await Kickboard.getKickboardDoc(kickboardCode);
     if (
       kickboardId &&
@@ -185,6 +188,22 @@ export default class Kickboard {
       }
     }
 
+    if (franchiseId) {
+      try {
+        const franchiseClient = InternalClient.getFranchise(
+          email || 'unknown@hikick.kr',
+          [FranchisePermission.FRANCHISES_VIEW]
+        );
+
+        await franchiseClient.getFranchise(franchiseId);
+      } catch (err) {
+        throw new InternalError(
+          `${franchiseId} 프렌차이즈를 찾을 수 없습니다.`,
+          OPCODE.NOT_FOUND
+        );
+      }
+    }
+
     const where = { kickboardCode };
     const data: any = {
       kickboardId,
@@ -194,6 +213,7 @@ export default class Kickboard {
     if (mode !== undefined) data.mode = mode;
     if (lost !== undefined) data.lost = lost;
     if (collect !== undefined) data.collect = collect;
+    if (franchiseId !== undefined) data.franchiseId = franchiseId;
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
     } else {

@@ -1,5 +1,6 @@
 export { default as InternalError } from './error';
 export { default as Geometry } from './geometry';
+export { default as InternalClient } from './internalClient';
 export { default as Joi } from './joi';
 export { default as logger } from './logger';
 export { default as MongoDB } from './mongodb';

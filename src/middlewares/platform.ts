@@ -1,23 +1,18 @@
 import { Callback, Wrapper, logger } from '../tools';
 import {
   InternalError,
-  InternalPlatformClient,
   OPCODE,
   PlatformPermission,
 } from 'openapi-internal-sdk';
 
-import os from 'os';
+import InternalClient from '../tools/internalClient';
 
 export default function PlatformMiddleware(
   permissionIds: string[] = []
 ): Callback {
-  const hostname = os.hostname();
-  const platformClient = new InternalPlatformClient({
-    issuer: 'openapi.hikick.kr',
-    secretKey: process.env.HIKICK_OPENAPI_PLATFORM_KEY || '',
-    email: `${hostname}-${process.env.NODE_ENV}@${process.env.AWS_LAMBDA_FUNCTION_NAME}.openapi.hikick.kr`,
-    permissions: [PlatformPermission.ACCESS_KEYS_AUTHORIZE],
-  });
+  const platformClient = InternalClient.getPlatform('system@hikick.kr', [
+    PlatformPermission.ACCESS_KEYS_AUTHORIZE,
+  ]);
 
   platformClient.baseURL = process.env.HIKICK_OPENAPI_PLATFORM_URL || '';
   return Wrapper(async (req, res, next) => {

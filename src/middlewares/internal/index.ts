@@ -33,7 +33,7 @@ export default function InternalMiddleware(): Callback {
       const data = jwt.verify(token, key);
       const schema = Joi.object({
         sub: Joi.string().valid('openapi-kickboard').required(),
-        iss: Joi.string().hostname().required(),
+        iss: Joi.string().required(),
         aud: Joi.string().email().required(),
         prs: Joi.string().required(),
         iat: Joi.date().timestamp().required(),
