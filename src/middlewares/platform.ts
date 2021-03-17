@@ -36,7 +36,7 @@ export default function PlatformMiddleware(
 
       throw new InternalError(
         '인증이 필요한 서비스입니다.',
-        OPCODE.REQUIRED_INTERAL_LOGIN
+        OPCODE.REQUIRED_INTERNAL_LOGIN
       );
     }
   });
