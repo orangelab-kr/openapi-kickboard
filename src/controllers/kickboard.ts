@@ -155,9 +155,9 @@ export default class Kickboard {
   public static async setKickboard(
     kickboardCode: string,
     props: {
-      kickboardId: string;
-      franchiseId: string;
-      regionId: string;
+      kickboardId?: string;
+      franchiseId?: string;
+      regionId?: string;
       mode?: KickboardMode;
       lost?: KickboardLost;
       collect?: KickboardCollect;
@@ -165,9 +165,9 @@ export default class Kickboard {
   ): Promise<Kickboard> {
     kickboardCode = kickboardCode.toUpperCase();
     const schema = Joi.object({
-      kickboardId: Joi.string().required(),
-      franchiseId: Joi.string().uuid().required(),
-      regionId: Joi.string().uuid().required(),
+      kickboardId: Joi.string().optional(),
+      franchiseId: Joi.string().uuid().optional(),
+      regionId: Joi.string().uuid().optional(),
       mode: Joi.number().min(0).max(5).optional(),
       lost: Joi.number().min(0).max(3).allow(null).optional(),
       collect: Joi.number().min(0).max(3).allow(null).optional(),
@@ -217,11 +217,8 @@ export default class Kickboard {
     }
 
     const where = { kickboardCode };
-    const data: any = {
-      kickboardId,
-      kickboardCode,
-    };
-
+    const data: any = { kickboardCode };
+    if (kickboardId !== undefined) data.kickboardId = kickboardId;
     if (mode !== undefined) data.mode = mode;
     if (lost !== undefined) data.lost = lost;
     if (collect !== undefined) data.collect = collect;
@@ -230,6 +227,13 @@ export default class Kickboard {
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
     } else {
+      if (kickboardId && franchiseId && regionId) {
+        throw new InternalError(
+          '킥보드 ID, 프렌차이즈 ID, 지역 ID를 모두 입력해야 합니다.',
+          OPCODE.ERROR
+        );
+      }
+
       await KickboardModel.create(data);
     }
 
