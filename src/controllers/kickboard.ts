@@ -1,3 +1,4 @@
+import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
 import { InternalClient, InternalError, Joi, OPCODE, logger } from '../tools';
 import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import {
@@ -15,7 +16,6 @@ import {
   KickboardQueryToShort,
 } from '../queries/kickboard';
 
-import { FranchisePermission } from 'openapi-internal-sdk';
 import Geo from '../tools/geometry';
 import Tried from '../tools/tried';
 
@@ -156,23 +156,25 @@ export default class Kickboard {
     kickboardCode: string,
     props: {
       kickboardId: string;
+      franchiseId: string;
+      regionId: string;
       mode?: KickboardMode;
       lost?: KickboardLost;
       collect?: KickboardCollect;
-    },
-    email: string
+    }
   ): Promise<Kickboard> {
     kickboardCode = kickboardCode.toUpperCase();
     const schema = Joi.object({
       kickboardId: Joi.string().required(),
       franchiseId: Joi.string().uuid().required(),
+      regionId: Joi.string().uuid().required(),
       mode: Joi.number().min(0).max(5).optional(),
       lost: Joi.number().min(0).max(3).allow(null).optional(),
       collect: Joi.number().min(0).max(3).allow(null).optional(),
     });
 
     const obj = await schema.validateAsync(props);
-    const { kickboardId, franchiseId, mode, lost, collect } = obj;
+    const { kickboardId, franchiseId, regionId, mode, lost, collect } = obj;
     const beforeKickboard = await Kickboard.getKickboardDoc(kickboardCode);
     if (
       kickboardId &&
@@ -190,15 +192,25 @@ export default class Kickboard {
 
     if (franchiseId) {
       try {
-        const franchiseClient = InternalClient.getFranchise(
-          email || 'unknown@hikick.kr',
-          [FranchisePermission.FRANCHISES_VIEW]
-        );
-
-        await franchiseClient.getFranchise(franchiseId);
+        await InternalClient.getFranchise([
+          FranchisePermission.FRANCHISES_VIEW,
+        ]).getFranchise(franchiseId);
       } catch (err) {
         throw new InternalError(
           `${franchiseId} 프렌차이즈를 찾을 수 없습니다.`,
+          OPCODE.NOT_FOUND
+        );
+      }
+    }
+
+    if (regionId) {
+      try {
+        await InternalClient.getLocation([
+          LocationPermission.REGIONS_VIEW,
+        ]).getRegion(regionId);
+      } catch (err) {
+        throw new InternalError(
+          `${regionId} 지역을 찾을 수 없습니다.`,
           OPCODE.NOT_FOUND
         );
       }
@@ -214,6 +226,7 @@ export default class Kickboard {
     if (lost !== undefined) data.lost = lost;
     if (collect !== undefined) data.collect = collect;
     if (franchiseId !== undefined) data.franchiseId = franchiseId;
+    if (regionId !== undefined) data.regionId = regionId;
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
     } else {

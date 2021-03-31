@@ -62,13 +62,12 @@ export default function getInternalRouter(): Router {
     '/:kickboardCode',
     InternalPermissionMiddleware(PERMISSION.ACTION_SET),
     Wrapper(async (req, res) => {
-      const {
-        body,
-        internal: { aud },
-        params: { kickboardCode },
-      } = req;
+      const { body, params } = req;
+      const kickboard = await Kickboard.setKickboard(
+        params.kickboardCode,
+        body
+      );
 
-      const kickboard = await Kickboard.setKickboard(kickboardCode, body, aud);
       res.json({ opcode: OPCODE.SUCCESS, kickboard });
     })
   );

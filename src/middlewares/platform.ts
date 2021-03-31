@@ -10,11 +10,10 @@ import InternalClient from '../tools/internalClient';
 export default function PlatformMiddleware(
   permissionIds: string[] = []
 ): Callback {
-  const platformClient = InternalClient.getPlatform('system@hikick.kr', [
+  const platformClient = InternalClient.getPlatform([
     PlatformPermission.ACCESS_KEYS_AUTHORIZE,
   ]);
 
-  platformClient.baseURL = process.env.HIKICK_OPENAPI_PLATFORM_URL || '';
   return Wrapper(async (req, res, next) => {
     try {
       const { headers } = req;
