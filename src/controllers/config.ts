@@ -1,6 +1,5 @@
-import { ConfigDoc, ConfigModel } from '../models';
-
 import { KickboardClient } from 'kickboard-sdk';
+import { ConfigDoc, ConfigModel } from '../models';
 import Tried from '../tools/tried';
 
 export default class Config {
@@ -21,7 +20,7 @@ export default class Config {
   public static async refreshConfig(
     kickboard: KickboardClient
   ): Promise<Config> {
-    await kickboard.getInfo();
+    await kickboard.getConfig();
     return Config.getConfig(kickboard);
   }
 }
