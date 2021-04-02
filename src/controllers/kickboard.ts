@@ -161,6 +161,7 @@ export default class Kickboard {
       mode?: KickboardMode;
       lost?: KickboardLost;
       collect?: KickboardCollect;
+      maxSpeed?: number;
     }
   ): Promise<Kickboard> {
     kickboardCode = kickboardCode.toUpperCase();
@@ -171,10 +172,24 @@ export default class Kickboard {
       mode: Joi.number().min(0).max(5).optional(),
       lost: Joi.number().min(0).max(3).allow(null).optional(),
       collect: Joi.number().min(0).max(3).allow(null).optional(),
+      maxSpeed: Joi.number()
+        .min(0)
+        .max(50)
+        .allow(null)
+        .default(null)
+        .optional(),
     });
 
     const obj = await schema.validateAsync(props);
-    const { kickboardId, franchiseId, regionId, mode, lost, collect } = obj;
+    const {
+      kickboardId,
+      franchiseId,
+      regionId,
+      mode,
+      lost,
+      collect,
+      maxSpeed,
+    } = obj;
     const beforeKickboard = await Kickboard.getKickboardDoc(kickboardCode);
     if (
       kickboardId &&
@@ -224,6 +239,7 @@ export default class Kickboard {
     if (collect !== undefined) data.collect = collect;
     if (franchiseId !== undefined) data.franchiseId = franchiseId;
     if (regionId !== undefined) data.regionId = regionId;
+    if (maxSpeed !== undefined) data.maxSpeed = maxSpeed;
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
     } else {
