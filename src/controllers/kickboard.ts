@@ -1,6 +1,5 @@
-import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
-import { InternalClient, InternalError, Joi, OPCODE, logger } from '../tools';
 import { KickboardClient, KickboardService } from 'kickboard-sdk';
+import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
 import {
   KickboardCollect,
   KickboardDoc,
@@ -15,7 +14,7 @@ import {
   KickboardQueryRadiusLocation,
   KickboardQueryToShort,
 } from '../queries/kickboard';
-
+import { InternalClient, InternalError, Joi, logger, OPCODE } from '../tools';
 import Geo from '../tools/geometry';
 import Tried from '../tools/tried';
 
@@ -145,7 +144,7 @@ export default class Kickboard {
     };
 
     const [total, kickboards] = await Promise.all([
-      KickboardModel.count(where),
+      KickboardModel.countDocuments(where),
       KickboardModel.find(where).limit(take).skip(skip),
     ]);
 
