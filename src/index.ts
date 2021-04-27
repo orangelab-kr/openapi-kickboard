@@ -1,13 +1,9 @@
 import Kickboard from './controllers/kickboard';
 import MongoDB from './tools/mongodb';
-import dotenv from 'dotenv';
 import express from 'express';
 import expressWs from 'express-ws';
 import getRouter from './routes';
 import logger from './tools/logger';
-if (process.env.NODE_ENV === 'dev') {
-  dotenv.config({ path: '.env.dev' });
-}
 
 async function main() {
   logger.info('[System] 시스템을 활성화하고 있습니다.');

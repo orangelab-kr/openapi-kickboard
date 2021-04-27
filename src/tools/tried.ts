@@ -1,6 +1,6 @@
 import { InternalError } from '.';
-import logger from './logger';
 import OPCODE from './opcode';
+import logger from './logger';
 
 export default async function Tried<T>(
   cb: () => Promise<T | undefined>
