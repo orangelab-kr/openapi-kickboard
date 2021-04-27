@@ -77,8 +77,8 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.ACTION_START),
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
-      const { kickboardClient } = req.internal;
-      await Kickboard.start(kickboardClient);
+      const { kickboardClient, kickboard } = req.internal;
+      await Kickboard.start(kickboard, kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
@@ -88,8 +88,8 @@ export default function getInternalRouter(): Router {
     InternalPermissionMiddleware(PERMISSION.ACTION_STOP),
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
-      const { kickboardClient } = req.internal;
-      await Kickboard.stop(kickboardClient);
+      const { kickboardClient, kickboard } = req.internal;
+      await Kickboard.stop(kickboard, kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );

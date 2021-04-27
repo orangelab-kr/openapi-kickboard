@@ -1,5 +1,6 @@
-import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
+import { InternalClient, InternalError, Joi, OPCODE, logger } from '../tools';
+import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import {
   KickboardCollect,
   KickboardDoc,
@@ -14,7 +15,7 @@ import {
   KickboardQueryRadiusLocation,
   KickboardQueryToShort,
 } from '../queries/kickboard';
-import { InternalClient, InternalError, Joi, logger, OPCODE } from '../tools';
+
 import Geo from '../tools/geometry';
 import Tried from '../tools/tried';
 
@@ -260,12 +261,28 @@ export default class Kickboard {
     return kickboard;
   }
 
-  public static async start(kickboardClient: KickboardClient): Promise<void> {
-    await Tried(() => kickboardClient.start());
+  public static async start(
+    kickboard: KickboardDoc,
+    kickboardClient: KickboardClient
+  ): Promise<void> {
+    await Tried(async () => {
+      await kickboardClient.start();
+      await Kickboard.setKickboard(kickboard.kickboardCode, {
+        mode: KickboardMode.INUSE,
+      });
+    });
   }
 
-  public static async stop(kickboardClient: KickboardClient): Promise<void> {
-    await Tried(() => kickboardClient.stop());
+  public static async stop(
+    kickboard: KickboardDoc,
+    kickboardClient: KickboardClient
+  ): Promise<void> {
+    await Tried(async () => {
+      await kickboardClient.stop();
+      await Kickboard.setKickboard(kickboard.kickboardCode, {
+        mode: KickboardMode.INUSE,
+      });
+    });
   }
 
   public static async lock(kickboardClient: KickboardClient): Promise<void> {

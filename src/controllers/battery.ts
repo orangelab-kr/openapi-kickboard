@@ -13,6 +13,7 @@ export default class Battery {
         '-_id -__v'
       );
 
+      console.log(kickboardId);
       if (battery) return battery;
       await kickboard.getBattery();
     });
