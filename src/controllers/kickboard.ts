@@ -267,7 +267,7 @@ export default class Kickboard {
   ): Promise<void> {
     await Tried(kickboardClient.start.bind(kickboardClient));
     await Kickboard.setKickboard(kickboard.kickboardCode, {
-      mode: KickboardMode.READY,
+      mode: KickboardMode.INUSE,
     });
   }
 
@@ -277,7 +277,7 @@ export default class Kickboard {
   ): Promise<void> {
     await Tried(kickboardClient.stop.bind(kickboardClient));
     await Kickboard.setKickboard(kickboard.kickboardCode, {
-      mode: KickboardMode.INUSE,
+      mode: KickboardMode.READY,
     });
   }
 
