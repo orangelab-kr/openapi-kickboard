@@ -5,10 +5,8 @@ import {
   PacketStatusTrip,
 } from 'kickboard-sdk';
 
-import { Moment } from 'moment';
-
 export declare class PacketStatusGps {
-  timestamp: Moment;
+  timestamp: Date;
   latitude: number;
   longitude: number;
   satelliteUsedCount: number;
