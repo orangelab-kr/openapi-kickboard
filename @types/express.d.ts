@@ -1,12 +1,19 @@
 import 'express';
 import { KickboardClient } from 'kickboard-sdk';
-import { InternalPlatformAccessKey } from 'openapi-internal-sdk';
+import {
+  InternalPlatformAccessKey,
+  InternalPlatformUser,
+} from 'openapi-internal-sdk';
 import { KickboardDoc } from '../src/models';
 
 declare global {
   namespace Express {
     interface Request {
-      accessKey: InternalPlatformAccessKey;
+      loggined: {
+        platform: InternalPlatform;
+        accessKey?: InternalPlatformAccessKey;
+        user?: InternalPlatformUser;
+      };
       kickboard: KickboardShort;
       internal: {
         sub: string;

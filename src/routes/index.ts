@@ -5,7 +5,7 @@ import InternalMiddleware from '../middlewares/internal';
 import { Kickboard } from '../controllers';
 import KickboardMiddleware from '../middlewares/kickboard';
 import { KickboardMode } from '../models';
-import PlatformMiddleware from '../middlewares/platform';
+import { PlatformMiddleware } from '../middlewares/platform';
 import getInternalRouter from './internal';
 import morgan from 'morgan';
 import os from 'os';
