@@ -161,6 +161,7 @@ export default class Kickboard {
       mode?: KickboardMode;
       lost?: KickboardLost;
       collect?: KickboardCollect;
+      photo?: string | null;
       maxSpeed?: number;
     }
   ): Promise<Kickboard> {
@@ -172,6 +173,7 @@ export default class Kickboard {
       mode: Joi.number().min(0).max(5).optional(),
       lost: Joi.number().min(0).max(3).allow(null).optional(),
       collect: Joi.number().min(0).max(3).allow(null).optional(),
+      photo: Joi.string().uri().allow(null).optional(),
       maxSpeed: Joi.number()
         .min(0)
         .max(50)
@@ -188,6 +190,7 @@ export default class Kickboard {
       mode,
       lost,
       collect,
+      photo,
       maxSpeed,
     } = obj;
     const beforeKickboard = await Kickboard.getKickboardDoc(kickboardCode);
@@ -240,6 +243,7 @@ export default class Kickboard {
     if (franchiseId !== undefined) data.franchiseId = franchiseId;
     if (regionId !== undefined) data.regionId = regionId;
     if (maxSpeed !== undefined) data.maxSpeed = maxSpeed;
+    if (photo !== undefined) data.photo = photo;
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
     } else {

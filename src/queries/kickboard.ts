@@ -38,6 +38,7 @@ export const KickboardQueryToShort = () => [
     $project: {
       _id: 0,
       kickboardCode: 1,
+      photo: 1,
       lost: 1,
       'status.power.scooter.battery': 1,
       'status.gps.latitude': 1,
