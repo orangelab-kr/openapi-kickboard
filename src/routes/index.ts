@@ -6,6 +6,7 @@ import { Kickboard } from '../controllers';
 import KickboardMiddleware from '../middlewares/kickboard';
 import { KickboardMode } from '../models';
 import { PlatformMiddleware } from '../middlewares/platform';
+import cors from 'cors';
 import getInternalRouter from './internal';
 import morgan from 'morgan';
 import os from 'os';
@@ -17,6 +18,7 @@ export default function getRouter(): Router {
     stream: { write: (str: string) => logger.info(`${str.trim()}`) },
   });
 
+  router.use(cors());
   router.use(logging);
   router.use(express.json());
   router.use(express.urlencoded({ extended: true }));
