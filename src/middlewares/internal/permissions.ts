@@ -1,7 +1,4 @@
-import Wrapper, { Callback } from '../../tools/wrapper';
-
-import InternalError from '../../tools/error';
-import { OPCODE } from '../../tools';
+import { Callback, InternalError, OPCODE, Wrapper } from '../..';
 
 export enum PERMISSION {
   METHOD_LATEST, // 마지막 정보
@@ -44,9 +41,7 @@ export enum PERMISSION {
   ACTION_REBOOT, // 킥보드 재부팅
 }
 
-export default function InternalPermissionMiddleware(
-  permission: PERMISSION
-): Callback {
+export function InternalPermissionMiddleware(permission: PERMISSION): Callback {
   return Wrapper(async (req, res, next) => {
     if (!req.internal.prs[permission]) {
       throw new InternalError(

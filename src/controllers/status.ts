@@ -1,10 +1,8 @@
-import { StatusDoc, StatusModel } from '../models';
+import { Joi, StatusDoc, StatusModel, Tried } from '..';
 
-import { Joi } from '../tools';
 import { KickboardClient } from 'kickboard-sdk';
-import Tried from '../tools/tried';
 
-export default class Status {
+export class Status {
   public static async getStatus(
     kickboard: KickboardClient
   ): Promise<StatusDoc> {

@@ -1,11 +1,13 @@
-import { Router } from 'express';
-import { Bluetooth } from '../../controllers';
-import InternalPermissionMiddleware, {
+import {
+  Bluetooth,
+  InternalPermissionMiddleware,
+  OPCODE,
   PERMISSION,
-} from '../../middlewares/internal/permissions';
-import { OPCODE, Wrapper } from '../../tools';
+  Wrapper,
+} from '../..';
 
-export default function getInternalBluetoothRouter(): Router {
+import { Router } from 'express';
+export function getInternalBluetoothRouter(): Router {
   const router = Router();
 
   router.get(

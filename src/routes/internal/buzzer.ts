@@ -1,11 +1,14 @@
-import { Router } from 'express';
-import { Buzzer } from '../../controllers';
-import InternalPermissionMiddleware, {
+import {
+  Buzzer,
+  InternalPermissionMiddleware,
+  OPCODE,
   PERMISSION,
-} from '../../middlewares/internal/permissions';
-import { OPCODE, Wrapper } from '../../tools';
+  Wrapper,
+} from '../..';
 
-export default function getInternalBuzzerRouter(): Router {
+import { Router } from 'express';
+
+export function getInternalBuzzerRouter(): Router {
   const router = Router();
 
   router.get(

@@ -1,8 +1,8 @@
-import { KickboardClient } from 'kickboard-sdk';
-import { ConfigDoc, ConfigModel } from '../models';
-import Tried from '../tools/tried';
+import { ConfigDoc, ConfigModel, Tried } from '..';
 
-export default class Config {
+import { KickboardClient } from 'kickboard-sdk';
+
+export class Config {
   public static async getConfig(
     kickboard: KickboardClient
   ): Promise<ConfigDoc> {

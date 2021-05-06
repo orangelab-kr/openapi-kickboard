@@ -1,8 +1,8 @@
 import { BuzzerMode, KickboardClient } from 'kickboard-sdk';
 
-import { Joi } from '../tools';
+import { Joi } from '..';
 
-export default class Buzzer {
+export class Buzzer {
   public static async buzzerOn(
     kickboardClient: KickboardClient,
     props: {

@@ -1,11 +1,14 @@
-import { Router } from 'express';
-import { Light } from '../../controllers';
-import InternalPermissionMiddleware, {
+import {
+  InternalPermissionMiddleware,
+  Light,
+  OPCODE,
   PERMISSION,
-} from '../../middlewares/internal/permissions';
-import { OPCODE, Wrapper } from '../../tools';
+  Wrapper,
+} from '../..';
 
-export default function getInternalLightRouter(): Router {
+import { Router } from 'express';
+
+export function getInternalLightRouter(): Router {
   const router = Router();
 
   router.get(

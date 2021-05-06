@@ -1,12 +1,15 @@
-import { Router } from 'express';
-import { PacketConfig } from 'kickboard-sdk';
-import { Config } from '../../controllers';
-import InternalPermissionMiddleware, {
+import {
+  Config,
+  InternalPermissionMiddleware,
+  OPCODE,
   PERMISSION,
-} from '../../middlewares/internal/permissions';
-import { OPCODE, Wrapper } from '../../tools';
+  Wrapper,
+} from '../..';
 
-export default function getInternalConfigRouter(): Router {
+import { PacketConfig } from 'kickboard-sdk';
+import { Router } from 'express';
+
+export function getInternalConfigRouter(): Router {
   const router = Router();
 
   router.get(

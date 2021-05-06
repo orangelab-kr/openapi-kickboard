@@ -1,11 +1,14 @@
-import { Router } from 'express';
-import { Alarm } from '../../controllers';
-import InternalPermissionMiddleware, {
+import {
+  Alarm,
+  InternalPermissionMiddleware,
+  OPCODE,
   PERMISSION,
-} from '../../middlewares/internal/permissions';
-import { OPCODE, Wrapper } from '../../tools';
+  Wrapper,
+} from '../..';
 
-export default function getInternalAlarmRouter(): Router {
+import { Router } from 'express';
+
+export function getInternalAlarmRouter(): Router {
   const router = Router();
 
   router.get(

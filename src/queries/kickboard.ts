@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { KickboardMode } from '../models';
+import { KickboardMode } from '..';
 
 export const KickboardQueryMode = (...mode: KickboardMode[]) => [
   { $match: { mode: { $in: mode } } },

@@ -4,7 +4,7 @@ import {
   InternalPlatformAccessKey,
   InternalPlatformUser,
 } from 'openapi-internal-sdk';
-import { KickboardDoc } from '../src/models';
+import { KickboardDoc } from '..';
 
 declare global {
   namespace Express {

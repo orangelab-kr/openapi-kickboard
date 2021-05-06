@@ -212,15 +212,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*":
-  version "15.0.1"
-  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/@types/node/-/node-15.0.1.tgz#ef34dea0881028d11398be5bf4e856743e3dc35a"
-  integrity sha512-TMkXt0Ck1y0KKsGr9gJtWGjttxlZnnvDtphxUOSd0bfaR6Q1jle+sPvrzNR1urqYTWMinoKvjKfXUGsumaO1PA==
-
-"@types/node@^14.14.43":
-  version "14.14.43"
-  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/@types/node/-/node-14.14.43.tgz#26bcbb0595b305400e8ceaf9a127a7f905ae49c8"
-  integrity sha512-3pwDJjp1PWacPTpH0LcfhgjvurQvrZFBrC6xxjaUEZ7ifUtT32jtjPxEMMblpqd2Mvx+k8haqQJLQxolyGN/cQ==
+"@types/node@*", "@types/node@^15.0.2":
+  version "15.0.2"
+  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/@types/node/-/node-15.0.2.tgz#51e9c0920d1b45936ea04341aa3e2e58d339fb67"
+  integrity sha512-p68+a+KoxpoB47015IeYZYRrdqMUcpbK8re/zpFB8Ld46LHC1lPEbp3EXgkEhAYEcPvjJF6ZO+869SQ0aH1dcA==
 
 "@types/prettier@^2.1.5":
   version "2.2.3"
@@ -755,11 +750,6 @@ doctrine@^3.0.0:
   integrity sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==
   dependencies:
     esutils "^2.0.2"
-
-dotenv@^8.2.0:
-  version "8.2.0"
-  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
-  integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
 duplexer@~0.1.1:
   version "0.1.2"
@@ -1690,10 +1680,10 @@ one-time@^1.0.0:
   dependencies:
     fn.name "1.x.x"
 
-openapi-internal-sdk@^1.5.2:
-  version "1.5.2"
-  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/openapi-internal-sdk/-/openapi-internal-sdk-1.5.2.tgz#455c7932099f92ce93bf8c55c7bc8937acea5980"
-  integrity sha512-9UF9eP+kzPTlfAuLyji4AHnU9k9lXXTcAK5AnZg2Px58Z7lEXhws3p62dncR6EKFK7IZa85+JURZ65v9y2/QyA==
+openapi-internal-sdk@^1.5.3:
+  version "1.5.3"
+  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/openapi-internal-sdk/-/openapi-internal-sdk-1.5.3.tgz#230e00d871a625cbaa0e654cc19ed2571793c65a"
+  integrity sha512-vxCqEAtnOp5YKSK/B3SuqA5P5xjGi6JZO1huovHzySLS0KxZBMBk6Kp1YUodK4thCRZFh29tVfNsi1NVXnanaQ==
   dependencies:
     axios "^0.21.1"
     jsonwebtoken "^8.5.1"

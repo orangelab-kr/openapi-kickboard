@@ -1,13 +1,15 @@
-import InternalPermissionMiddleware, {
+import {
+  InternalPermissionMiddleware,
+  OPCODE,
   PERMISSION,
-} from '../../middlewares/internal/permissions';
-import { OPCODE, Wrapper } from '../../tools';
+  Status,
+  Wrapper,
+} from '../..';
 
 import { PacketStatus } from 'kickboard-sdk';
 import { Router } from 'express';
-import { Status } from '../../controllers';
 
-export default function getInternalStatusRouter(): Router {
+export function getInternalStatusRouter(): Router {
   const router = Router();
 
   router.get(

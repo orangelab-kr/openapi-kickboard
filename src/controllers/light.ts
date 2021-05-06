@@ -1,8 +1,8 @@
 import { KickboardClient, LightMode } from 'kickboard-sdk';
 
-import { Joi } from '../tools';
+import { Joi } from '..';
 
-export default class Light {
+export class Light {
   public static async lightOn(
     kickboardClient: KickboardClient,
     props: {

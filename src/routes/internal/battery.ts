@@ -1,12 +1,15 @@
-import { Router } from 'express';
-import { PacketBattery } from 'kickboard-sdk';
-import { Battery } from '../../controllers';
-import InternalPermissionMiddleware, {
+import {
+  Battery,
+  InternalPermissionMiddleware,
+  OPCODE,
   PERMISSION,
-} from '../../middlewares/internal/permissions';
-import { OPCODE, Wrapper } from '../../tools';
+  Wrapper
+} from '../..';
 
-export default function getInternalBatteryRouter(): Router {
+import { PacketBattery } from 'kickboard-sdk';
+import { Router } from 'express';
+
+export function getInternalBatteryRouter(): Router {
   const router = Router();
 
   router.get(

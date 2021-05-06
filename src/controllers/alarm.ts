@@ -1,8 +1,8 @@
 import { AlarmMode, KickboardClient } from 'kickboard-sdk';
 
-import { Joi } from '../tools';
+import { Joi } from '..';
 
-export default class Alarm {
+export class Alarm {
   public static async alarmOn(
     kickboardClient: KickboardClient,
     props: {

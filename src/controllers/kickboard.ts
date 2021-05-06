@@ -1,23 +1,24 @@
 import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
-import { InternalClient, InternalError, Joi, OPCODE, logger } from '../tools';
-import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import {
+  Geometry,
+  InternalClient,
+  InternalError,
+  Joi,
   KickboardCollect,
   KickboardDoc,
   KickboardLost,
   KickboardMode,
   KickboardModel,
-} from '../models';
-import {
   KickboardQueryKickboardCode,
   KickboardQueryLookupStatus,
   KickboardQueryMode,
   KickboardQueryRadiusLocation,
   KickboardQueryToShort,
-} from '../queries/kickboard';
-
-import Geo from '../tools/geometry';
-import Tried from '../tools/tried';
+  OPCODE,
+  Tried,
+  logger,
+} from '..';
+import { KickboardClient, KickboardService } from 'kickboard-sdk';
 
 export interface KickboardShort {
   kickboardCode: string;
@@ -31,7 +32,7 @@ export interface KickboardShort {
   };
 }
 
-export default class Kickboard {
+export class Kickboard {
   public static kickboardService: KickboardService;
 
   public static async init(): Promise<void> {
@@ -95,7 +96,7 @@ export default class Kickboard {
 
     const query: any = [];
     const { lat, lng, radius, status } = await schema.validateAsync(props);
-    const { low, high } = Geo.getRect({ lat, lng, radius });
+    const { low, high } = Geometry.getRect({ lat, lng, radius });
     if (status) query.push(...KickboardQueryMode(...status));
     query.push(...KickboardQueryLookupStatus());
     query.push(...KickboardQueryRadiusLocation(low, high));

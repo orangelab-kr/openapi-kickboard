@@ -1,22 +1,33 @@
-import InternalPermissionMiddleware, {
+import {
+  InternalKickboardMiddleware,
+  InternalPermissionMiddleware,
+  Kickboard,
+  OPCODE,
   PERMISSION,
-} from '../../middlewares/internal/permissions';
-import { OPCODE, Wrapper } from '../../tools';
+  Wrapper,
+  getInternalAlarmRouter,
+  getInternalBatteryRouter,
+  getInternalBluetoothRouter,
+  getInternalBuzzerRouter,
+  getInternalConfigRouter,
+  getInternalInfoRouter,
+  getInternalLightRouter,
+  getInternalStatusRouter,
+} from '../..';
 
-import InternalKickboardMiddleware from '../../middlewares/internal/kickboard';
-import { Kickboard } from '../../controllers';
 import { Packet } from 'kickboard-sdk';
 import { Router } from 'express';
-import getInternalAlarmRouter from './alarm';
-import getInternalBatteryRouter from './battery';
-import getInternalBluetoothRouter from './bluetooth';
-import getInternalBuzzerRouter from './buzzer';
-import getInternalConfigRouter from './config';
-import getInternalInfoRouter from './info';
-import getInternalLightRouter from './light';
-import getInternalStatusRouter from './status';
 
-export default function getInternalRouter(): Router {
+export * from './alarm';
+export * from './battery';
+export * from './bluetooth';
+export * from './buzzer';
+export * from './config';
+export * from './info';
+export * from './light';
+export * from './status';
+
+export function getInternalRouter(): Router {
   const router = Router();
 
   router.get(

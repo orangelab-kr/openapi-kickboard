@@ -1,10 +1,6 @@
-import { InternalError } from '.';
-import OPCODE from './opcode';
-import logger from './logger';
+import { InternalError, OPCODE, logger } from '.';
 
-export default async function Tried<T>(
-  cb: () => Promise<T | undefined>
-): Promise<T> {
+export async function Tried<T>(cb: () => Promise<T | undefined>): Promise<T> {
   const tried = 2;
   let error = new Error('알 수 없는 오류가 발생했습니다.');
   for (let i = 1; i <= tried; i++) {

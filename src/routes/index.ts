@@ -1,17 +1,24 @@
-import { InternalError, OPCODE, Wrapper, logger } from '../tools';
+import {
+  InternalError,
+  InternalMiddleware,
+  Kickboard,
+  KickboardMiddleware,
+  KickboardMode,
+  OPCODE,
+  PlatformMiddleware,
+  Wrapper,
+  getInternalRouter,
+  logger,
+} from '..';
 import express, { Router } from 'express';
 
-import InternalMiddleware from '../middlewares/internal';
-import { Kickboard } from '../controllers';
-import KickboardMiddleware from '../middlewares/kickboard';
-import { KickboardMode } from '../models';
-import { PlatformMiddleware } from '../middlewares/platform';
 import cors from 'cors';
-import getInternalRouter from './internal';
 import morgan from 'morgan';
 import os from 'os';
 
-export default function getRouter(): Router {
+export * from './internal';
+
+export function getRouter(): Router {
   const router = Router();
   const hostname = os.hostname();
   const logging = morgan('common', {

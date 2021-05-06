@@ -1,9 +1,6 @@
-import { InternalError, OPCODE } from '../tools';
-import Wrapper, { Callback } from '../tools/wrapper';
+import { Callback, InternalError, Kickboard, OPCODE, Wrapper } from '..';
 
-import Kickboard from '../controllers/kickboard';
-
-export default function KickboardMiddleware(): Callback {
+export function KickboardMiddleware(): Callback {
   return Wrapper(async (req, res, next) => {
     const { kickboardCode } = req.params;
     if (!kickboardCode) {

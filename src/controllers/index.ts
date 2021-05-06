@@ -1,9 +1,9 @@
-export { default as Alarm } from './alarm';
-export { default as Battery } from './battery';
-export { default as Bluetooth } from './bluetooth';
-export { default as Buzzer } from './buzzer';
-export { default as Config } from './config';
-export { default as Info } from './info';
-export { default as Kickboard } from './kickboard';
-export { default as Light } from './light';
-export { default as Status } from './status';
+export * from './alarm';
+export * from './battery';
+export * from './bluetooth';
+export * from './buzzer';
+export * from './config';
+export * from './info';
+export * from './kickboard';
+export * from './light';
+export * from './status';

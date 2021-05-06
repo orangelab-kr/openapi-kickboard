@@ -1,9 +1,8 @@
-import { InfoDoc, InfoModel } from '../models';
+import { InfoDoc, InfoModel, Tried } from '..';
 
 import { KickboardClient } from 'kickboard-sdk';
-import Tried from '../tools/tried';
 
-export default class Info {
+export class Info {
   public static async getInfo(kickboard: KickboardClient): Promise<InfoDoc> {
     return Tried<InfoDoc>(async () => {
       const { kickboardId } = kickboard;

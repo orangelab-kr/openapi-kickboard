@@ -1,9 +1,8 @@
-import { BatteryDoc, BatteryModel } from '../models';
+import { BatteryDoc, BatteryModel, Tried } from '..';
 
 import { KickboardClient } from 'kickboard-sdk';
-import Tried from '../tools/tried';
 
-export default class Battery {
+export class Battery {
   public static async getBattery(
     kickboard: KickboardClient
   ): Promise<BatteryDoc> {
