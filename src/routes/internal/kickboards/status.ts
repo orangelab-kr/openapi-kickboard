@@ -4,17 +4,17 @@ import {
   PERMISSION,
   Status,
   Wrapper,
-} from '../..';
+} from '../../..';
 
 import { PacketStatus } from 'kickboard-sdk';
 import { Router } from 'express';
 
-export function getInternalStatusRouter(): Router {
+export function getInternalKickboardsStatusRouter(): Router {
   const router = Router();
 
   router.get(
     '/',
-    InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const status = await Status.getStatus(kickboardClient);
@@ -24,7 +24,7 @@ export function getInternalStatusRouter(): Router {
 
   router.get(
     '/timeline',
-    InternalPermissionMiddleware(PERMISSION.METHOD_TIMELINE),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_TIMELINE),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const status = await Status.getStatusBySpecificTime(
@@ -38,7 +38,7 @@ export function getInternalStatusRouter(): Router {
 
   router.post(
     '/',
-    InternalPermissionMiddleware(PERMISSION.METHOD_REFRESH),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_REFRESH),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const status = await Status.refreshStatus(kickboardClient);
@@ -47,7 +47,7 @@ export function getInternalStatusRouter(): Router {
   );
 
   router
-    .use(InternalPermissionMiddleware(PERMISSION.METHOD_REALTIME))
+    .use(InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_REALTIME))
     .ws('/', async (ws, req) => {
       const { kickboardClient } = req.internal;
       const subscribe = await kickboardClient.createSubscribe();

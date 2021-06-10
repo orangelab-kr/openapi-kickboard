@@ -4,17 +4,17 @@ import {
   OPCODE,
   PERMISSION,
   Wrapper,
-} from '../..';
+} from '../../..';
 
 import { PacketInfo } from 'kickboard-sdk';
 import { Router } from 'express';
 
-export function getInternalInfoRouter(): Router {
+export function getInternalKickboardsInfoRouter(): Router {
   const router = Router();
 
   router.get(
     '/',
-    InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const info = await Info.getInfo(kickboardClient);
@@ -24,7 +24,7 @@ export function getInternalInfoRouter(): Router {
 
   router.post(
     '/',
-    InternalPermissionMiddleware(PERMISSION.METHOD_REFRESH),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_REFRESH),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const info = await Info.refreshInfo(kickboardClient);
@@ -33,7 +33,7 @@ export function getInternalInfoRouter(): Router {
   );
 
   router
-    .use(InternalPermissionMiddleware(PERMISSION.METHOD_REALTIME))
+    .use(InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_REALTIME))
     .ws('/', async (ws, req) => {
       const { kickboardClient } = req.internal;
       const subscribe = await kickboardClient.createSubscribe();

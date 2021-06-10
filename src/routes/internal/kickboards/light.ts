@@ -1,31 +1,32 @@
 import {
-  Bluetooth,
   InternalPermissionMiddleware,
+  Light,
   OPCODE,
   PERMISSION,
   Wrapper,
-} from '../..';
+} from '../../..';
 
 import { Router } from 'express';
-export function getInternalBluetoothRouter(): Router {
+
+export function getInternalKickboardsLightRouter(): Router {
   const router = Router();
 
   router.get(
     '/on',
-    InternalPermissionMiddleware(PERMISSION.ACTION_BLUETOOTH_ON),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_LIGHT_ON),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
-      await Bluetooth.bluetoothOn(kickboardClient);
+      await Light.lightOn(kickboardClient, req.query);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );
 
   router.get(
     '/off',
-    InternalPermissionMiddleware(PERMISSION.ACTION_BLUETOOTH_OFF),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_LIGHT_OFF),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
-      await Bluetooth.bluetoothOff(kickboardClient);
+      await Light.lightOff(kickboardClient);
       res.json({ opcode: OPCODE.SUCCESS });
     })
   );

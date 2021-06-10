@@ -4,16 +4,16 @@ import {
   OPCODE,
   PERMISSION,
   Wrapper,
-} from '../..';
+} from '../../..';
 
 import { Router } from 'express';
 
-export function getInternalAlarmRouter(): Router {
+export function getInternalKickboardsAlarmRouter(): Router {
   const router = Router();
 
   router.get(
     '/on',
-    InternalPermissionMiddleware(PERMISSION.ACTION_ALARM_ON),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_ALARM_ON),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Alarm.alarmOn(kickboardClient, req.query);
@@ -23,7 +23,7 @@ export function getInternalAlarmRouter(): Router {
 
   router.get(
     '/off',
-    InternalPermissionMiddleware(PERMISSION.ACTION_ALARM_OFF),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_ALARM_OFF),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Alarm.alarmOff(kickboardClient);

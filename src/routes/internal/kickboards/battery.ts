@@ -3,18 +3,18 @@ import {
   InternalPermissionMiddleware,
   OPCODE,
   PERMISSION,
-  Wrapper
-} from '../..';
+  Wrapper,
+} from '../../..';
 
 import { PacketBattery } from 'kickboard-sdk';
 import { Router } from 'express';
 
-export function getInternalBatteryRouter(): Router {
+export function getInternalKickboardsBatteryRouter(): Router {
   const router = Router();
 
   router.get(
     '/',
-    InternalPermissionMiddleware(PERMISSION.METHOD_LATEST),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const battery = await Battery.getBattery(kickboardClient);
@@ -24,7 +24,7 @@ export function getInternalBatteryRouter(): Router {
 
   router.post(
     '/',
-    InternalPermissionMiddleware(PERMISSION.METHOD_REFRESH),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_REFRESH),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const battery = await Battery.refreshBattery(kickboardClient);
@@ -34,7 +34,7 @@ export function getInternalBatteryRouter(): Router {
 
   router.get(
     '/lock',
-    InternalPermissionMiddleware(PERMISSION.ACTION_BATTERY_LOCK),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_BATTERY_LOCK),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Battery.batteryLock(kickboardClient);
@@ -44,7 +44,7 @@ export function getInternalBatteryRouter(): Router {
 
   router.get(
     '/unlock',
-    InternalPermissionMiddleware(PERMISSION.ACTION_BATTERY_UNLOCK),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_BATTERY_UNLOCK),
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Battery.batteryUnlock(kickboardClient);
@@ -53,7 +53,7 @@ export function getInternalBatteryRouter(): Router {
   );
 
   router
-    .use(InternalPermissionMiddleware(PERMISSION.METHOD_REALTIME))
+    .use(InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_REALTIME))
     .ws('/', async (ws, req) => {
       const { kickboardClient } = req.internal;
       const subscribe = await kickboardClient.createSubscribe();
