@@ -7,3 +7,4 @@ export * from './info';
 export * from './kickboard';
 export * from './light';
 export * from './status';
+export * from './helmet';
