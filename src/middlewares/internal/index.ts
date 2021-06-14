@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 
 export * from './kickboard';
 export * from './permissions';
+export * from './helmet';
+
 export function InternalMiddleware(): Callback {
   return Wrapper(async (req, res, next) => {
     const { headers, query } = req;

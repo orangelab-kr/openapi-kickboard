@@ -24,7 +24,7 @@ export function Wrapper(cb: Callback): Callback {
       let message = '알 수 없는 오류가 발생했습니다.';
       let details;
 
-      if (err instanceof InternalError) {
+      if (err.name === 'InternalError') {
         opcode = err.opcode;
         message = err.message;
         details = err.details;

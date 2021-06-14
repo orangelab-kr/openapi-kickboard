@@ -22,6 +22,7 @@ declare global {
         prs: boolean[];
         kickboard: KickboardDoc;
         kickboardClient: KickboardClient;
+        helmet: HelmetDoc;
         iat: Date;
         exp: Date;
       };
