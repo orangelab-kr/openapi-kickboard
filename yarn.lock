@@ -216,10 +216,10 @@
   resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/@types/node/-/node-15.12.2.tgz#1f2b42c4be7156ff4a6f914b2fb03d05fa84e38d"
   integrity sha512-zjQ69G564OCIWIOHSXyQEEDpdpGl+G348RAKY0XXy9Z5kU9Vzv1GMNnkar/ZJ8dzXB3COzD9Mo9NtRZ4xfgUww==
 
-"@types/prettier@^2.1.5":
-  version "2.2.3"
-  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/@types/prettier/-/prettier-2.2.3.tgz#ef65165aea2924c9359205bf748865b8881753c0"
-  integrity sha512-PijRCG/K3s3w1We6ynUKdxEc5AcuuH3NBmMDP8uvKVp6X43UY7NQlTzczakXP3DJR0F4dfNQIGjU2cUeRYs2AA==
+"@types/prettier@^2.3.0":
+  version "2.3.0"
+  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/@types/prettier/-/prettier-2.3.0.tgz#2e8332cc7363f887d32ec5496b207d26ba8052bb"
+  integrity sha512-hkc1DATxFLQo4VxPDpMH1gCkPpBbpOoJ/4nhuXw4n63/0R6bCpQECj4+K226UJ4JO/eJQz+1mC2I7JsWanAdQw==
 
 "@types/qs@*":
   version "6.9.6"
@@ -1659,10 +1659,10 @@ one-time@^1.0.0:
   dependencies:
     fn.name "1.x.x"
 
-openapi-internal-sdk@^1.5.3:
-  version "1.5.3"
-  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/openapi-internal-sdk/-/openapi-internal-sdk-1.5.3.tgz#230e00d871a625cbaa0e654cc19ed2571793c65a"
-  integrity sha512-vxCqEAtnOp5YKSK/B3SuqA5P5xjGi6JZO1huovHzySLS0KxZBMBk6Kp1YUodK4thCRZFh29tVfNsi1NVXnanaQ==
+openapi-internal-sdk@^1.6.0:
+  version "1.6.0"
+  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/openapi-internal-sdk/-/openapi-internal-sdk-1.6.0.tgz#542a9e65aca6017f9978468ddedff1b18bcf4132"
+  integrity sha512-vKAv1sNoj9KL8GfDuRk0Kgr67UJ4q6QDndH85X3hEqV2cY8NoPspiErN9dLqXbRHR+myFaQ967S1+1eN4s9VPw==
   dependencies:
     axios "^0.21.1"
     jsonwebtoken "^8.5.1"
@@ -1843,9 +1843,9 @@ regexp-clone@1.0.0, regexp-clone@^1.0.0:
   integrity sha512-TuAasHQNamyyJ2hb97IuBEif4qBHGjPHBS64sZwytpLEqtBQ1gPJTnOaQ6qmpET16cK14kkjbazl6+p0RRv0yw==
 
 regexpp@^3.1.0:
-  version "3.1.0"
-  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/regexpp/-/regexpp-3.1.0.tgz#206d0ad0a5648cffbdb8ae46438f3dc51c9f78e2"
-  integrity sha512-ZOIzd8yVsQQA7j8GCSlPGXwg5PfmA1mrq0JP4nGhh54LaKN3xdai/vHUDu74pKwV8OxseMS65u2NImosQcSD0Q==
+  version "3.2.0"
+  resolved "https://hikick-547032093617.d.codeartifact.ap-northeast-1.amazonaws.com:443/npm/hikick/regexpp/-/regexpp-3.2.0.tgz#0425a2768d8f23bad70ca4b90461fa2f1213e1b2"
+  integrity sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==
 
 require-from-string@^2.0.2:
   version "2.0.2"
