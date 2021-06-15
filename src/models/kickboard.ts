@@ -1,6 +1,5 @@
-import { Document, Schema, model } from 'mongoose';
-
-import { StatusDoc } from './status';
+import { Document, model, Schema } from 'mongoose';
+import { HelmetDoc, StatusDoc } from '.';
 
 export interface KickboardDoc extends Document {
   kickboardId: string;
@@ -11,6 +10,7 @@ export interface KickboardDoc extends Document {
   maxSpeed: number | null;
   collect: KickboardCollect;
   status?: StatusDoc;
+  helmetId?: HelmetDoc;
   updatedAt?: Date;
   createdAt?: Date;
 }
@@ -60,6 +60,7 @@ export const KickboardSchema = new Schema(
       required: false,
     },
     status: { type: Schema.Types.ObjectId, ref: 'status' },
+    helmetId: { type: Schema.Types.ObjectId, ref: 'helmet' },
   },
   { timestamps: true }
 );

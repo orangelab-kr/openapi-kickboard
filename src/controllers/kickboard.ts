@@ -1,6 +1,8 @@
+import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
 import {
   Geometry,
+  Helmet,
   InternalClient,
   InternalError,
   Joi,
@@ -14,11 +16,10 @@ import {
   KickboardQueryMode,
   KickboardQueryRadiusLocation,
   KickboardQueryToShort,
+  logger,
   OPCODE,
   Tried,
-  logger,
 } from '..';
-import { KickboardClient, KickboardService } from 'kickboard-sdk';
 
 export interface KickboardShort {
   kickboardCode: string;
@@ -132,22 +133,31 @@ export class Kickboard {
     take?: number;
     skip?: number;
     search?: number;
+    orderByField?: 'kickboardId' | 'kickboardCode' | 'createdAt' | 'updatedAt';
+    orderBySort?: 'asc' | 'desc';
   }): Promise<{ total: number; kickboards: KickboardDoc[] }> {
     const schema = Joi.object({
       take: Joi.number().default(10).optional(),
       skip: Joi.number().default(0).optional(),
       search: Joi.string().default('').allow('').optional(),
+      orderByField: Joi.string()
+        .default('kickboardId')
+        .valid('kickboardId', 'kickboardCode', 'createdAt', 'updatedAt')
+        .optional(),
+      orderBySort: Joi.string().default('desc').valid('asc', 'desc').optional(),
     });
 
-    const { take, skip, search } = await schema.validateAsync(props);
+    const { take, skip, search, orderBySort, orderByField } =
+      await schema.validateAsync(props);
     const $regex = new RegExp(search);
     const where = {
       $or: [{ kickboardId: { $regex } }, { kickboardCode: { $regex } }],
     };
 
+    const sort = { [orderByField]: orderBySort };
     const [total, kickboards] = await Promise.all([
       KickboardModel.countDocuments(where),
-      KickboardModel.find(where).limit(take).skip(skip),
+      KickboardModel.find(where).limit(take).skip(skip).sort(sort),
     ]);
 
     return { total, kickboards };
@@ -164,6 +174,7 @@ export class Kickboard {
       collect?: KickboardCollect;
       photo?: string | null;
       maxSpeed?: number;
+      helmetId?: string;
     }
   ): Promise<Kickboard> {
     kickboardCode = kickboardCode.toUpperCase();
@@ -171,6 +182,7 @@ export class Kickboard {
       kickboardId: Joi.string().optional(),
       franchiseId: Joi.string().uuid().optional(),
       regionId: Joi.string().uuid().optional(),
+      helmetId: Joi.string().allow(null).optional(),
       mode: Joi.number().min(0).max(5).optional(),
       lost: Joi.number().min(0).max(3).allow(null).optional(),
       collect: Joi.number().min(0).max(3).allow(null).optional(),
@@ -188,6 +200,7 @@ export class Kickboard {
       kickboardId,
       franchiseId,
       regionId,
+      helmetId,
       mode,
       lost,
       collect,
@@ -195,6 +208,7 @@ export class Kickboard {
       maxSpeed,
     } = obj;
     const beforeKickboard = await Kickboard.getKickboardDoc(kickboardCode);
+    if (helmetId) await Helmet.getHelmetOrThrow(helmetId);
     if (
       kickboardId &&
       beforeKickboard &&
@@ -245,6 +259,7 @@ export class Kickboard {
     if (regionId !== undefined) data.regionId = regionId;
     if (maxSpeed !== undefined) data.maxSpeed = maxSpeed;
     if (photo !== undefined) data.photo = photo;
+    if (helmetId !== undefined) data.helmetId = helmetId;
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
     } else {
