@@ -295,8 +295,8 @@ export class Kickboard {
     kickboard: KickboardDoc,
     kickboardClient: KickboardClient
   ): Promise<void> {
-    await Tried(kickboardClient.stop.bind(kickboardClient));
     await kickboardClient.lightOff();
+    await Tried(kickboardClient.stop.bind(kickboardClient));
     await Kickboard.setKickboard(kickboard.kickboardCode, {
       mode: KickboardMode.READY,
     });
