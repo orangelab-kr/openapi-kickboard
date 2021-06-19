@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Helmet, InternalHelmetMiddleware, OPCODE, Wrapper } from '../..';
+import { InternalHelmetByMacMiddleware } from '../../middlewares';
 
 export function getInternalHelmetsRouter() {
   const router = Router();
@@ -33,6 +34,15 @@ export function getInternalHelmetsRouter() {
   router.get(
     '/:helmetId',
     InternalHelmetMiddleware(),
+    Wrapper(async (req, res) => {
+      const { helmet } = req.internal;
+      res.json({ opcode: OPCODE.SUCCESS, helmet });
+    })
+  );
+
+  router.get(
+    '/byMac/:macAddress',
+    InternalHelmetByMacMiddleware(),
     Wrapper(async (req, res) => {
       const { helmet } = req.internal;
       res.json({ opcode: OPCODE.SUCCESS, helmet });

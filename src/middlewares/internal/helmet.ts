@@ -11,3 +11,15 @@ export function InternalHelmetMiddleware(): Callback {
     await next();
   });
 }
+
+export function InternalHelmetByMacMiddleware(): Callback {
+  return Wrapper(async (req, res, next) => {
+    const { macAddress } = req.params;
+    if (!macAddress) {
+      throw new InternalError('헬멧을 찾을 수 없습니다.', OPCODE.NOT_FOUND);
+    }
+
+    req.internal.helmet = await Helmet.getHelmetByMacOrThrow(macAddress);
+    await next();
+  });
+}
