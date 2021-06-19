@@ -84,11 +84,15 @@ export class Helmet {
     const { macAddress, version, status, battery, password, encryptKey } =
       await schema.validateAsync(props);
 
-    await HelmetModel.updateOne(
-      { _id },
-      { macAddress, version, status, battery, password, encryptKey }
-    );
-
+    const where = { _id };
+    const data: any = {};
+    if (macAddress !== undefined) data.macAddress = macAddress;
+    if (version !== undefined) data.version = version;
+    if (status !== undefined) data.status = status;
+    if (battery !== undefined) data.battery = battery;
+    if (password !== undefined) data.password = password;
+    if (encryptKey !== undefined) data.encryptKey = encryptKey;
+    await HelmetModel.updateOne(where, data);
     const updatedHelmet = await this.getHelmetOrThrow(_id);
     return updatedHelmet;
   }
