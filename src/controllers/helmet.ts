@@ -17,7 +17,7 @@ export class Helmet {
     battery: number;
   }): Promise<HelmetDoc> {
     const schema = Joi.object({
-      macAddress: Joi.string().length(16).alphanum().lowercase().required(),
+      macAddress: Joi.string().length(12).alphanum().lowercase().required(),
       password: Joi.string().length(6).required(),
       version: Joi.number().min(0).max(1).required(),
       status: Joi.number().min(0).max(4).required(),
@@ -72,7 +72,7 @@ export class Helmet {
     }
   ): Promise<HelmetDoc> {
     const schema = Joi.object({
-      macAddress: Joi.string().length(16).alphanum().lowercase().optional(),
+      macAddress: Joi.string().length(12).alphanum().lowercase().optional(),
       version: Joi.number().min(0).max(1).optional(),
       password: Joi.string().length(6).optional(),
       status: Joi.number().min(0).max(4).optional(),
