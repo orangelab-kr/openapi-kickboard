@@ -25,7 +25,7 @@ export class Helmet {
       battery: Joi.number().min(0).max(100).required(),
     });
 
-    const { macAddress, version, battery, password, encryptKey } =
+    const { macAddress, version, battery, status, password, encryptKey } =
       await schema.validateAsync(props);
 
     const exists = await this.getHelmetByMac(macAddress);
@@ -40,6 +40,7 @@ export class Helmet {
     const helmet = await HelmetModel.create({
       macAddress,
       version,
+      status
       battery,
       password,
       encryptKey,
