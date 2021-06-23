@@ -40,7 +40,7 @@ export class Helmet {
     const helmet = await HelmetModel.create({
       macAddress,
       version,
-      status
+      status,
       battery,
       password,
       encryptKey,
