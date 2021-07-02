@@ -10,7 +10,7 @@ export interface KickboardDoc extends Document {
   maxSpeed: number | null;
   collect: KickboardCollect;
   status?: StatusDoc;
-  helmetId?: HelmetDoc;
+  helmetId?: string | null;
   updatedAt?: Date;
   createdAt?: Date;
 }

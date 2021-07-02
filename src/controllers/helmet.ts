@@ -98,6 +98,10 @@ export class Helmet {
     return updatedHelmet;
   }
 
+  public static async disconnectAllHelmet(helmetId: string) {
+    await KickboardModel.updateMany({ helmetId }, { helmetId: null });
+  }
+
   public static async getHelmetOrThrow(helmetId: string): Promise<HelmetDoc> {
     const helmet = await this.getHelmet(helmetId);
     if (!helmet) {

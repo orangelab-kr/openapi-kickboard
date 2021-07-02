@@ -259,7 +259,11 @@ export class Kickboard {
     if (regionId !== undefined) data.regionId = regionId;
     if (maxSpeed !== undefined) data.maxSpeed = maxSpeed;
     if (photo !== undefined) data.photo = photo;
-    if (helmetId !== undefined) data.helmetId = helmetId;
+    if (helmetId !== undefined) {
+      await Helmet.disconnectAllHelmet(helmetId);
+      data.helmetId = helmetId;
+    }
+
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
     } else {
