@@ -141,10 +141,15 @@ export class Kickboard {
       orderBySort: Joi.string().default('desc').valid('asc', 'desc').optional(),
     });
 
-    const where = { helmetId: null };
     const { orderBySort, orderByField } = await schema.validateAsync(props);
-    const sort = { [orderByField]: orderBySort };
-    const kickboards = await KickboardModel.find(where).sort(sort);
+    const sort = orderBySort === 'asc' ? 1 : -1;
+    const query: any = [
+      ...KickboardQueryLookupStatus(),
+      { $match: { helmetId: null } },
+      { $sort: { [orderByField]: sort } },
+    ];
+
+    const kickboards = await KickboardModel.aggregate(query);
     const total = kickboards.length;
     return { total, kickboards };
   }
