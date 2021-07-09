@@ -47,4 +47,22 @@ export const KickboardQueryToShort = () => [
   },
 ];
 
+export const KickboardQueryDisconnected = (deadlineDate: Date) => [
+  {
+    $match: {
+      disconnectedAt: null,
+      'status.createdAt': { $lte: deadlineDate },
+    },
+  },
+];
+
+export const KickboardQueryReconnected = (deadlineDate: Date) => [
+  {
+    $match: {
+      disconnectedAt: { $ne: null },
+      'status.createdAt': { $gt: deadlineDate },
+    },
+  },
+];
+
 export const KickboardQueryCount = () => [{ $count: 'total' }];

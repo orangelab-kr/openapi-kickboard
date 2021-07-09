@@ -129,6 +129,26 @@ export class Kickboard {
     return kickboard;
   }
 
+  public static async getKickboardByHelmetUnmount(props: {
+    orderByField?: 'kickboardId' | 'kickboardCode' | 'createdAt' | 'updatedAt';
+    orderBySort?: 'asc' | 'desc';
+  }): Promise<{ total: number; kickboards: KickboardDoc[] }> {
+    const schema = Joi.object({
+      orderByField: Joi.string()
+        .default('kickboardId')
+        .valid('kickboardId', 'kickboardCode', 'createdAt', 'updatedAt')
+        .optional(),
+      orderBySort: Joi.string().default('desc').valid('asc', 'desc').optional(),
+    });
+
+    const where = { helmetId: null };
+    const { orderBySort, orderByField } = await schema.validateAsync(props);
+    const sort = { [orderByField]: orderBySort };
+    const kickboards = await KickboardModel.find(where).sort(sort);
+    const total = kickboards.length;
+    return { total, kickboards };
+  }
+
   public static async getKickboardDocs(props: {
     take?: number;
     skip?: number;

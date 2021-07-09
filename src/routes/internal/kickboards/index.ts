@@ -41,6 +41,22 @@ export function getInternalKickboardsRouter() {
     })
   );
 
+  // Legacy: 헬멧 미장착
+  router.get(
+    '/helmet-unmount',
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_LOOKUP_DETAIL),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_SEARCH_LIST),
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
+    Wrapper(async (req, res) => {
+      const { query } = req;
+      const { total, kickboards } = await Kickboard.getKickboardByHelmetUnmount(
+        query
+      );
+
+      res.json({ opcode: OPCODE.SUCCESS, kickboards, total });
+    })
+  );
+
   router.get(
     '/near',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_LOOKUP_DETAIL),
