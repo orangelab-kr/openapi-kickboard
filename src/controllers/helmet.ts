@@ -3,6 +3,10 @@ import { InternalError } from 'openapi-internal-sdk';
 import {
   HelmetDoc,
   HelmetModel,
+  HelmetQueryByHelmetId,
+  HelmetQueryByMacAddress,
+  HelmetQueryLookupKickboard,
+  HelmetQueryOnlyOnce,
   HelmetStatus,
   KickboardModel,
   OPCODE,
@@ -125,11 +129,19 @@ export class Helmet {
   public static async getHelmetByMac(
     macAddress: string
   ): Promise<HelmetDoc | null> {
-    return HelmetModel.findOne({ macAddress });
+    return HelmetModel.aggregate([
+      ...HelmetQueryByMacAddress(macAddress),
+      ...HelmetQueryOnlyOnce(),
+      ...HelmetQueryLookupKickboard(),
+    ]).then((r) => r[0]);
   }
 
   public static async getHelmet(helmetId: string): Promise<HelmetDoc | null> {
-    return HelmetModel.findById(helmetId);
+    return HelmetModel.aggregate([
+      ...HelmetQueryByHelmetId(helmetId),
+      ...HelmetQueryOnlyOnce(),
+      ...HelmetQueryLookupKickboard(),
+    ]).then((r) => r[0]);
   }
 
   public static async getHelmets(props: {

@@ -1,7 +1,6 @@
-import { Kickboard, MongoDB, getRouter, logger } from '.';
-
 import express from 'express';
 import expressWs from 'express-ws';
+import { getRouter, Kickboard, logger, MongoDB } from '.';
 
 export * from './controllers';
 export * from './middlewares';
