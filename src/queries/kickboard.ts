@@ -18,7 +18,12 @@ export const KickboardQueryLookupStatus = () => [
       as: 'status',
     },
   },
-  { $unwind: '$status' },
+  {
+    $unwind: {
+      path: '$status',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
 ];
 
 export const KickboardQueryRadiusLocation = (
@@ -40,6 +45,7 @@ export const KickboardQueryToShort = () => [
       kickboardCode: 1,
       photo: 1,
       lost: 1,
+      helmetId: 1,
       'status.power.scooter.battery': 1,
       'status.gps.latitude': 1,
       'status.gps.longitude': 1,

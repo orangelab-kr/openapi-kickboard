@@ -10,7 +10,12 @@ export const HelmetQueryLookupKickboard = () => [
       as: 'kickboard',
     },
   },
-  { $unwind: '$kickboard' },
+  {
+    $unwind: {
+      path: '$kickboard',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
 ];
 
 export const HelmetQueryByMacAddress = (macAddress: string) => [
