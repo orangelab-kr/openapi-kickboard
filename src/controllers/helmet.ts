@@ -1,12 +1,16 @@
 import Joi from 'joi';
 import { InternalError } from 'openapi-internal-sdk';
 import {
+  GlobalQueryPagnation,
   HelmetDoc,
   HelmetModel,
   HelmetQueryByHelmetId,
   HelmetQueryByMacAddress,
   HelmetQueryLookupKickboard,
   HelmetQueryOnlyOnce,
+  HelmetQuerySearch,
+  HelmetQuerySort,
+  HelmetQueryStatus,
   HelmetStatus,
   KickboardModel,
   OPCODE,
@@ -148,33 +152,30 @@ export class Helmet {
     take?: number;
     skip?: number;
     search?: number;
+    status?: HelmetStatus[];
     orderByField?: 'helmetId' | 'battery' | 'createdAt' | 'updatedAt';
     orderBySort?: 'asc' | 'desc';
   }): Promise<{ total: number; helmets: HelmetDoc[] }> {
     const schema = Joi.object({
       take: Joi.number().default(10).optional(),
       skip: Joi.number().default(0).optional(),
+      status: Joi.array().items(Joi.number()).optional(),
       search: Joi.string().default('').allow('').optional(),
       orderByField: Joi.string()
         .default('helmetId')
         .valid('helmetId', 'battery', 'createdAt', 'updatedAt')
         .optional(),
-      orderBySort: Joi.string().default('desc').valid('asc', 'desc').optional(),
+      orderBySort: Joi.string().default('asc').valid('asc', 'desc').optional(),
     });
 
-    const { take, skip, search, orderByField, orderBySort } =
+    const { take, skip, search, status, orderByField, orderBySort } =
       await schema.validateAsync(props);
-    const $regex = new RegExp(search);
-    const where = {
-      $or: [{ helmetId: { $regex } }, { macAddress: { $regex } }],
-    };
-
-    const sort = { [orderByField]: orderBySort };
-    const [total, helmets] = await Promise.all([
-      HelmetModel.countDocuments(where),
-      HelmetModel.find(where).limit(take).skip(skip).sort(sort),
-    ]);
-
-    return { total, helmets };
+    const query: any = HelmetQueryLookupKickboard();
+    query.push(...HelmetQuerySort(orderByField, orderBySort));
+    if (search) query.push(...HelmetQuerySearch(search));
+    if (status) query.push(...HelmetQueryStatus(status));
+    query.push(...GlobalQueryPagnation('helmets', take, skip));
+    const res = await HelmetModel.aggregate(query);
+    return res[0];
   }
 }
