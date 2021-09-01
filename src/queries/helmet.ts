@@ -31,6 +31,17 @@ export const HelmetQueryLookupKickboard = () => [
       preserveNullAndEmptyArrays: true,
     },
   },
+  {
+    $set: {
+      kickboard: {
+        $cond: {
+          if: { $eq: ['$kickboard', {}] },
+          then: null,
+          else: '$kickboard',
+        },
+      },
+    },
+  },
 ];
 
 export const HelmetQueryByMacAddress = (macAddress: string) => [
