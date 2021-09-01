@@ -38,7 +38,7 @@ export const HelmetQueryByMacAddress = (macAddress: string) => [
 ];
 
 export const HelmetQueryByHelmetId = (helmetId: string) => [
-  { $match: { _id: Types.ObjectId(helmetId) } },
+  { $match: { _id: new Types.ObjectId(helmetId) } },
 ];
 
 export const HelmetQuerySearch = (search: string) => {
