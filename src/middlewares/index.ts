@@ -1,3 +1,5 @@
 export * from './internal';
-export * from './platform';
 export * from './kickboard';
+export * from './logger';
+export * from './platform';
+export * from './promise';

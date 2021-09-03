@@ -1,4 +1,7 @@
+import { Router } from 'express';
 import {
+  clusterInfo,
+  getInternalRouter,
   InternalError,
   InternalMiddleware,
   Kickboard,
@@ -7,38 +10,20 @@ import {
   OPCODE,
   PlatformMiddleware,
   Wrapper,
-  getInternalRouter,
-  logger,
 } from '..';
-import express, { Router } from 'express';
-
-import cors from 'cors';
-import morgan from 'morgan';
-import os from 'os';
 
 export * from './internal';
 
 export function getRouter(): Router {
   const router = Router();
-  const hostname = os.hostname();
-  const logging = morgan('common', {
-    stream: { write: (str: string) => logger.info(`${str.trim()}`) },
-  });
 
-  router.use(cors());
-  router.use(logging);
-  router.use(express.json());
-  router.use(express.urlencoded({ extended: true }));
   router.use('/internal', InternalMiddleware(), getInternalRouter());
   router.get(
     '/',
     Wrapper(async (_req, res) => {
       res.json({
         opcode: OPCODE.SUCCESS,
-        name: process.env.npm_package_name,
-        mode: process.env.NODE_ENV,
-        version: process.env.npm_package_version,
-        cluster: hostname,
+        ...clusterInfo,
       });
     })
   );

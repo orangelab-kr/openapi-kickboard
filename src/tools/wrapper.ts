@@ -1,7 +1,6 @@
-import { InternalError, OPCODE, logger } from '.';
 import { NextFunction, Request, Response } from 'express';
-
 import { ValidationError } from 'joi';
+import { logger, OPCODE } from '..';
 
 export type Callback = (
   req: Request,
@@ -36,6 +35,7 @@ export function Wrapper(cb: Callback): Callback {
         details = err.details;
       }
 
+      if (res.headersSent) return;
       res.status(status).json({
         opcode,
         message,
