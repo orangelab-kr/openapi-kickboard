@@ -9,6 +9,7 @@ import { KickboardDoc } from '..';
 declare global {
   namespace Express {
     interface Request {
+      permissionIds: string[];
       loggined: {
         platform: InternalPlatform;
         accessKey?: InternalPlatformAccessKey;

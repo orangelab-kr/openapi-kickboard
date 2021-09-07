@@ -30,7 +30,7 @@ export function getRouter(): Router {
 
   router.get(
     '/near',
-    PlatformMiddleware(),
+    PlatformMiddleware({ permissionIds: ['kickboards.list'], final: true }),
     Wrapper(async (req, res) => {
       const { query } = req;
       const { total, kickboards } = await Kickboard.getNearKickboards(
@@ -44,7 +44,7 @@ export function getRouter(): Router {
 
   router.get(
     '/:kickboardCode',
-    PlatformMiddleware(),
+    PlatformMiddleware({ permissionIds: ['kickboards.view'], final: true }),
     KickboardMiddleware(),
     Wrapper(async (req, res) => {
       const { kickboard } = req;
