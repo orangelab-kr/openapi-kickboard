@@ -332,11 +332,11 @@ export class Kickboard {
   }
 
   public static async lock(kickboardClient: KickboardClient): Promise<void> {
-    kickboardClient.lock();
+    await kickboardClient.stop();
   }
 
   public static async unlock(kickboardClient: KickboardClient): Promise<void> {
-    kickboardClient.unlock();
+    await kickboardClient.start();
   }
 
   public static async reboot(kickboardClient: KickboardClient): Promise<void> {
