@@ -48,6 +48,10 @@ export class Kickboard {
     logger.info('[Kickboard] 킥보드 서비스와 연결되었습니다.');
   }
 
+  public static async removeKickboard(kickboardCode: string): Promise<void> {
+    await KickboardModel.deleteOne({ kickboardCode });
+  }
+
   public static async getKickboardDocById(
     kickboardId: string
   ): Promise<KickboardDoc | null> {
@@ -253,7 +257,7 @@ export class Kickboard {
         await InternalClient.getFranchise([
           FranchisePermission.FRANCHISES_VIEW,
         ]).getFranchise(franchiseId);
-      } catch (err) {
+      } catch (err: any) {
         throw new InternalError(
           `${franchiseId} 프렌차이즈를 찾을 수 없습니다.`,
           OPCODE.NOT_FOUND
@@ -266,7 +270,7 @@ export class Kickboard {
         await InternalClient.getLocation([
           LocationPermission.REGIONS_VIEW,
         ]).getRegion(regionId);
-      } catch (err) {
+      } catch (err: any) {
         throw new InternalError(
           `${regionId} 지역을 찾을 수 없습니다.`,
           OPCODE.NOT_FOUND
@@ -292,7 +296,7 @@ export class Kickboard {
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
     } else {
-      if (kickboardId && franchiseId && regionId) {
+      if (!kickboardId || !franchiseId || !regionId) {
         throw new InternalError(
           '킥보드 ID, 프렌차이즈 ID, 지역 ID를 모두 입력해야 합니다.',
           OPCODE.ERROR

@@ -56,7 +56,7 @@ export function InternalMiddleware(): Callback {
       logger.info(
         `[Internal] [${payload.iss}] ${payload.aud} - ${req.method} ${req.originalUrl}`
       );
-    } catch (err) {
+    } catch (err: any) {
       throw new InternalError(
         '인증이 필요한 서비스입니다.',
         OPCODE.REQUIRED_INTERNAL_LOGIN

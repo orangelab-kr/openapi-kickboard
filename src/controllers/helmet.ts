@@ -38,11 +38,7 @@ export class Helmet {
 
     const exists = await this.getHelmetByMac(macAddress);
     if (exists) {
-      throw new InternalError(
-        '이미 등록된 헬멧입니다.',
-        OPCODE.ALREADY_EXISTS,
-        { helmet: exists }
-      );
+      throw new InternalError('이미 등록된 헬멧입니다.', OPCODE.ALREADY_EXISTS);
     }
 
     const helmet = await HelmetModel.create({

@@ -45,8 +45,8 @@ export const KickboardSchema = new Schema(
     kickboardCode: { type: String, required: true, unique: true },
     franchiseId: { type: String, required: true, index: true },
     regionId: { type: String, required: true, index: true },
-    maxSpeed: { type: Number, required: true, default: null },
-    photo: { type: String, required: true, default: null },
+    maxSpeed: { type: Number, default: null },
+    photo: { type: String, default: null },
     mode: {
       type: Number,
       enum: KickboardMode,

@@ -98,6 +98,15 @@ export function getInternalKickboardsRouter() {
     })
   );
 
+  router.delete(
+    '/:kickboardCode',
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_SET),
+    Wrapper(async (req, res) => {
+      await Kickboard.removeKickboard(req.params.kickboardCode);
+      res.json({ opcode: OPCODE.SUCCESS });
+    })
+  );
+
   router.get(
     '/:kickboardCode/start',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_START),

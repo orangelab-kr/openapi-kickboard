@@ -7,7 +7,7 @@ export async function Tried<T>(cb: () => Promise<T | undefined>): Promise<T> {
     try {
       const res = await cb();
       if (res) return res;
-    } catch (err) {
+    } catch (err: any) {
       error = err;
       logger.warn(
         `[Tried] Processing failure. ${error.message} (${i} of ${tried})`

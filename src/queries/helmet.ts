@@ -54,7 +54,7 @@ export const HelmetQueryByHelmetId = (helmetId: string) => [
 
 export const HelmetQuerySearch = (search: string) => {
   const $regex = new RegExp(search);
-  return [{ $or: [{ helmetId: { $regex } }, { macAddress: { $regex } }] }];
+  return [{ $or: [{ _id: { $regex } }, { macAddress: { $regex } }] }];
 };
 
 export const HelmetQueryStatus = (status: HelmetStatus[]) => [
@@ -64,4 +64,11 @@ export const HelmetQueryStatus = (status: HelmetStatus[]) => [
 export const HelmetQuerySort = (
   orderByField: string,
   orderBySort: 'asc' | 'desc'
-) => [{ $sort: { [orderByField]: orderBySort === 'asc' ? 1 : -1 } }];
+) => [
+  {
+    $sort: {
+      [orderByField === 'helmetId' ? '_id' : orderByField]:
+        orderBySort === 'asc' ? 1 : -1,
+    },
+  },
+];

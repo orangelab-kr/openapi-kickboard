@@ -39,6 +39,8 @@ export enum PERMISSION {
   KICKBOARD_ACTION_ALARM_OFF, // 알람 끄기
 
   KICKBOARD_ACTION_REBOOT, // 킥보드 재부팅
+
+  KICKBOARD_ACTION_DELETE, // 킥보드 삭제
 }
 
 export function InternalPermissionMiddleware(permission: PERMISSION): Callback {
