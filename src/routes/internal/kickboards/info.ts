@@ -18,7 +18,7 @@ export function getInternalKickboardsInfoRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const info = await Info.getInfo(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS, info });
+      throw RESULT.SUCCESS({ details: { info } });
     })
   );
 
@@ -28,7 +28,7 @@ export function getInternalKickboardsInfoRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const info = await Info.refreshInfo(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS, info });
+      throw RESULT.SUCCESS({ details: { info } });
     })
   );
 

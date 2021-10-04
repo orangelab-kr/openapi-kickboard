@@ -12,8 +12,8 @@ import {
   InternalKickboardMiddleware,
   InternalPermissionMiddleware,
   Kickboard,
-  OPCODE,
   PERMISSION,
+  RESULT,
   Wrapper,
 } from '../../..';
 
@@ -37,7 +37,7 @@ export function getInternalKickboardsRouter() {
     Wrapper(async (req, res) => {
       const { query } = req;
       const { total, kickboards } = await Kickboard.getKickboardDocs(query);
-      res.json({ opcode: OPCODE.SUCCESS, kickboards, total });
+      throw RESULT.SUCCESS({ details: { kickboards, total } });
     })
   );
 
@@ -53,7 +53,7 @@ export function getInternalKickboardsRouter() {
         query
       );
 
-      res.json({ opcode: OPCODE.SUCCESS, kickboards, total });
+      throw RESULT.SUCCESS({ details: { kickboards, total } });
     })
   );
 
@@ -69,7 +69,7 @@ export function getInternalKickboardsRouter() {
         true
       );
 
-      res.json({ opcode: OPCODE.SUCCESS, kickboards, total });
+      throw RESULT.SUCCESS({ details: { kickboards, total } });
     })
   );
 
@@ -80,7 +80,7 @@ export function getInternalKickboardsRouter() {
     InternalKickboardMiddleware(),
     Wrapper(async (req, res) => {
       const { kickboard } = req.internal;
-      res.json({ opcode: OPCODE.SUCCESS, kickboard });
+      throw RESULT.SUCCESS({ details: { kickboard } });
     })
   );
 
@@ -94,7 +94,7 @@ export function getInternalKickboardsRouter() {
         body
       );
 
-      res.json({ opcode: OPCODE.SUCCESS, kickboard });
+      throw RESULT.SUCCESS({ details: { kickboard } });
     })
   );
 
@@ -103,7 +103,7 @@ export function getInternalKickboardsRouter() {
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_SET),
     Wrapper(async (req, res) => {
       await Kickboard.removeKickboard(req.params.kickboardCode);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
@@ -114,7 +114,7 @@ export function getInternalKickboardsRouter() {
     Wrapper(async (req, res) => {
       const { kickboardClient, kickboard } = req.internal;
       await Kickboard.start(kickboard, kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
@@ -125,7 +125,7 @@ export function getInternalKickboardsRouter() {
     Wrapper(async (req, res) => {
       const { kickboardClient, kickboard } = req.internal;
       await Kickboard.stop(kickboard, kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
@@ -136,7 +136,7 @@ export function getInternalKickboardsRouter() {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Kickboard.lock(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
@@ -147,7 +147,7 @@ export function getInternalKickboardsRouter() {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Kickboard.unlock(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
@@ -158,7 +158,7 @@ export function getInternalKickboardsRouter() {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Kickboard.reboot(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 

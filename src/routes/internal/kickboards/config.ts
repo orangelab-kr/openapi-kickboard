@@ -1,13 +1,12 @@
+import { Router } from 'express';
+import { PacketConfig } from 'kickboard-sdk';
 import {
   Config,
   InternalPermissionMiddleware,
-  OPCODE,
   PERMISSION,
+  RESULT,
   Wrapper,
 } from '../../..';
-
-import { PacketConfig } from 'kickboard-sdk';
-import { Router } from 'express';
 
 export function getInternalKickboardsConfigRouter(): Router {
   const router = Router();
@@ -18,7 +17,7 @@ export function getInternalKickboardsConfigRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const config = await Config.getConfig(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS, config });
+      throw RESULT.SUCCESS({ details: { config } });
     })
   );
 
@@ -28,7 +27,7 @@ export function getInternalKickboardsConfigRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const config = await Config.refreshConfig(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS, config });
+      throw RESULT.SUCCESS({ details: { config } });
     })
   );
 

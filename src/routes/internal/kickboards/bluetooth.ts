@@ -1,12 +1,12 @@
+import { Router } from 'express';
 import {
   Bluetooth,
   InternalPermissionMiddleware,
-  OPCODE,
   PERMISSION,
+  RESULT,
   Wrapper,
 } from '../../..';
 
-import { Router } from 'express';
 export function getInternalKickboardsBluetoothRouter(): Router {
   const router = Router();
 
@@ -16,7 +16,7 @@ export function getInternalKickboardsBluetoothRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Bluetooth.bluetoothOn(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
@@ -26,7 +26,7 @@ export function getInternalKickboardsBluetoothRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Bluetooth.bluetoothOff(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 

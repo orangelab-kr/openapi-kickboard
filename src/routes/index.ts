@@ -21,10 +21,7 @@ export function getRouter(): Router {
   router.get(
     '/',
     Wrapper(async (_req, res) => {
-      res.json({
-        opcode: OPCODE.SUCCESS,
-        ...clusterInfo,
-      });
+      throw RESULT.SUCCESS({ details: clusterInfo });
     })
   );
 
@@ -38,7 +35,7 @@ export function getRouter(): Router {
         false
       );
 
-      res.json({ opcode: OPCODE.SUCCESS, kickboards, total });
+      throw RESULT.SUCCESS({ details: { kickboards, total } });
     })
   );
 
@@ -48,7 +45,7 @@ export function getRouter(): Router {
     KickboardMiddleware(),
     Wrapper(async (req, res) => {
       const { kickboard } = req;
-      res.json({ opcode: OPCODE.SUCCESS, kickboard });
+      throw RESULT.SUCCESS({ details: { kickboard } });
     })
   );
 

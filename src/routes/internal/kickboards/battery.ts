@@ -1,13 +1,12 @@
+import { Router } from 'express';
+import { PacketBattery } from 'kickboard-sdk';
 import {
   Battery,
   InternalPermissionMiddleware,
-  OPCODE,
   PERMISSION,
-  Wrapper,
+  RESULT,
+  Wrapper
 } from '../../..';
-
-import { PacketBattery } from 'kickboard-sdk';
-import { Router } from 'express';
 
 export function getInternalKickboardsBatteryRouter(): Router {
   const router = Router();
@@ -18,7 +17,7 @@ export function getInternalKickboardsBatteryRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const battery = await Battery.getBattery(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS, battery });
+      throw RESULT.SUCCESS({ details: { battery } });
     })
   );
 
@@ -28,7 +27,7 @@ export function getInternalKickboardsBatteryRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const battery = await Battery.refreshBattery(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS, battery });
+      throw RESULT.SUCCESS({ details: { battery } });
     })
   );
 
@@ -38,7 +37,7 @@ export function getInternalKickboardsBatteryRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Battery.batteryLock(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
@@ -48,7 +47,7 @@ export function getInternalKickboardsBatteryRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Battery.batteryUnlock(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 

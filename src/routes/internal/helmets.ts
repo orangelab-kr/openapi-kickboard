@@ -1,6 +1,11 @@
 import { Router } from 'express';
-import { Helmet, InternalHelmetMiddleware, OPCODE, Wrapper } from '../..';
-import { InternalHelmetByMacMiddleware } from '../../middlewares';
+import {
+  Helmet,
+  InternalHelmetByMacMiddleware,
+  InternalHelmetMiddleware,
+  RESULT,
+  Wrapper,
+} from '../..';
 
 export function getInternalHelmetsRouter() {
   const router = Router();
@@ -9,7 +14,7 @@ export function getInternalHelmetsRouter() {
     '/',
     Wrapper(async (req, res) => {
       const { helmets, total } = await Helmet.getHelmets(req.query);
-      res.json({ opcode: OPCODE.SUCCESS, helmets, total });
+      throw RESULT.SUCCESS({ details: { helmets, total } });
     })
   );
 
@@ -17,7 +22,7 @@ export function getInternalHelmetsRouter() {
     '/',
     Wrapper(async (req, res) => {
       const helmet = await Helmet.createHelmet(req.body);
-      res.json({ opcode: OPCODE.SUCCESS, helmet });
+      throw RESULT.SUCCESS({ details: { helmet } });
     })
   );
 
@@ -27,7 +32,7 @@ export function getInternalHelmetsRouter() {
     Wrapper(async (req, res) => {
       const { internal, body } = req;
       const helmet = await Helmet.modifyHelmet(internal.helmet, body);
-      res.json({ opcode: OPCODE.SUCCESS, helmet });
+      throw RESULT.SUCCESS({ details: { helmet } });
     })
   );
 
@@ -36,7 +41,7 @@ export function getInternalHelmetsRouter() {
     InternalHelmetMiddleware(),
     Wrapper(async (req, res) => {
       const { helmet } = req.internal;
-      res.json({ opcode: OPCODE.SUCCESS, helmet });
+      throw RESULT.SUCCESS({ details: { helmet } });
     })
   );
 
@@ -45,7 +50,7 @@ export function getInternalHelmetsRouter() {
     InternalHelmetByMacMiddleware(),
     Wrapper(async (req, res) => {
       const { helmet } = req.internal;
-      res.json({ opcode: OPCODE.SUCCESS, helmet });
+      throw RESULT.SUCCESS({ details: { helmet } });
     })
   );
 
@@ -54,7 +59,7 @@ export function getInternalHelmetsRouter() {
     InternalHelmetMiddleware(),
     Wrapper(async (req, res) => {
       await Helmet.deleteHelmet(req.internal.helmet);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 

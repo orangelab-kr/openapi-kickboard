@@ -17,7 +17,7 @@ export function getInternalKickboardsLightRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Light.lightOn(kickboardClient, req.query);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
@@ -27,7 +27,7 @@ export function getInternalKickboardsLightRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Light.lightOff(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 

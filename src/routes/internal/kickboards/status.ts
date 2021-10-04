@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { PacketStatus } from 'kickboard-sdk';
 import {
   InternalPermissionMiddleware,
-  OPCODE,
   PERMISSION,
+  RESULT,
   Status,
   Wrapper,
 } from '../../..';
@@ -17,7 +17,7 @@ export function getInternalKickboardsStatusRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const status = await Status.getStatus(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS, status });
+      throw RESULT.SUCCESS({ details: { status } });
     })
   );
 
@@ -31,7 +31,7 @@ export function getInternalKickboardsStatusRouter(): Router {
         req.query
       );
 
-      res.json({ opcode: OPCODE.SUCCESS, status });
+      throw RESULT.SUCCESS({ details: { status } });
     })
   );
 
@@ -41,7 +41,7 @@ export function getInternalKickboardsStatusRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       const status = await Status.refreshStatus(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS, status });
+      throw RESULT.SUCCESS({ details: { status } });
     })
   );
 

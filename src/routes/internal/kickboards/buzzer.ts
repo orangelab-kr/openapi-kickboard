@@ -1,12 +1,11 @@
+import { Router } from 'express';
 import {
   Buzzer,
   InternalPermissionMiddleware,
-  OPCODE,
   PERMISSION,
+  RESULT,
   Wrapper,
 } from '../../..';
-
-import { Router } from 'express';
 
 export function getInternalKickboardsBuzzerRouter(): Router {
   const router = Router();
@@ -17,7 +16,7 @@ export function getInternalKickboardsBuzzerRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Buzzer.buzzerOn(kickboardClient, req.query);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
@@ -27,7 +26,7 @@ export function getInternalKickboardsBuzzerRouter(): Router {
     Wrapper(async (req, res) => {
       const { kickboardClient } = req.internal;
       await Buzzer.buzzerOff(kickboardClient);
-      res.json({ opcode: OPCODE.SUCCESS });
+      throw RESULT.SUCCESS();
     })
   );
 
