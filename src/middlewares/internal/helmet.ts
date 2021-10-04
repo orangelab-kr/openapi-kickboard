@@ -1,24 +1,18 @@
-import { Callback, Helmet, InternalError, OPCODE, Wrapper } from '../..';
+import { Helmet, RESULT, Wrapper, WrapperCallback } from '../..';
 
-export function InternalHelmetMiddleware(): Callback {
+export function InternalHelmetMiddleware(): WrapperCallback {
   return Wrapper(async (req, res, next) => {
     const { helmetId } = req.params;
-    if (!helmetId) {
-      throw new InternalError('헬멧을 찾을 수 없습니다.', OPCODE.NOT_FOUND);
-    }
-
+    if (!helmetId) throw RESULT.CANNOT_FIND_HELMET();
     req.internal.helmet = await Helmet.getHelmetOrThrow(helmetId);
     await next();
   });
 }
 
-export function InternalHelmetByMacMiddleware(): Callback {
+export function InternalHelmetByMacMiddleware(): WrapperCallback {
   return Wrapper(async (req, res, next) => {
     const { macAddress } = req.params;
-    if (!macAddress) {
-      throw new InternalError('헬멧을 찾을 수 없습니다.', OPCODE.NOT_FOUND);
-    }
-
+    if (!macAddress) throw RESULT.CANNOT_FIND_HELMET();
     req.internal.helmet = await Helmet.getHelmetByMacOrThrow(macAddress);
     await next();
   });

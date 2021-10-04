@@ -2,13 +2,13 @@ import { Router } from 'express';
 import {
   clusterInfo,
   getInternalRouter,
-  InternalError,
   InternalMiddleware,
   Kickboard,
   KickboardMiddleware,
   KickboardMode,
   OPCODE,
   PlatformMiddleware,
+  RESULT,
   Wrapper,
 } from '..';
 
@@ -55,7 +55,7 @@ export function getRouter(): Router {
   router.all(
     '*',
     Wrapper(async () => {
-      throw new InternalError('Invalid API');
+      throw RESULT.INVALID_API();
     })
   );
 

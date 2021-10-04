@@ -1,3 +1,5 @@
+import { Router } from 'express';
+import { PacketStatus } from 'kickboard-sdk';
 import {
   InternalPermissionMiddleware,
   OPCODE,
@@ -5,9 +7,6 @@ import {
   Status,
   Wrapper,
 } from '../../..';
-
-import { PacketStatus } from 'kickboard-sdk';
-import { Router } from 'express';
 
 export function getInternalKickboardsStatusRouter(): Router {
   const router = Router();

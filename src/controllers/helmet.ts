@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import { InternalError } from 'openapi-internal-sdk';
 import {
   GlobalQueryPagnation,
   HelmetDoc,
@@ -13,7 +12,7 @@ import {
   HelmetQueryStatus,
   HelmetStatus,
   KickboardModel,
-  OPCODE,
+  RESULT,
 } from '..';
 
 export class Helmet {
@@ -37,10 +36,7 @@ export class Helmet {
       await schema.validateAsync(props);
 
     const exists = await this.getHelmetByMac(macAddress);
-    if (exists) {
-      throw new InternalError('이미 등록된 헬멧입니다.', OPCODE.ALREADY_EXISTS);
-    }
-
+    if (exists) throw RESULT.ALREADY_REGISTERED_HELMET();
     const helmet = await HelmetModel.create({
       macAddress,
       version,
@@ -56,12 +52,7 @@ export class Helmet {
   public static async deleteHelmet(helmet: HelmetDoc): Promise<void> {
     const { _id } = helmet;
     const kickboard = await KickboardModel.findOne({ helmetId: _id });
-    if (kickboard) {
-      throw new InternalError('킥보드와 연결된 헬멧입니다.', OPCODE.ERROR, {
-        kickboard,
-      });
-    }
-
+    if (kickboard) throw RESULT.HELMET_HAS_KICKBOARD();
     await HelmetModel.deleteOne({ _id });
   }
 
@@ -108,10 +99,7 @@ export class Helmet {
 
   public static async getHelmetOrThrow(helmetId: string): Promise<HelmetDoc> {
     const helmet = await this.getHelmet(helmetId);
-    if (!helmet) {
-      throw new InternalError('헬멧을 찾을 수 없습니다.', OPCODE.NOT_FOUND);
-    }
-
+    if (!helmet) throw RESULT.CANNOT_FIND_HELMET();
     return helmet;
   }
 
@@ -119,10 +107,7 @@ export class Helmet {
     macAddress: string
   ): Promise<HelmetDoc> {
     const helmet = await this.getHelmetByMac(macAddress);
-    if (!helmet) {
-      throw new InternalError('헬멧을 찾을 수 없습니다.', OPCODE.NOT_FOUND);
-    }
-
+    if (!helmet) throw RESULT.CANNOT_FIND_HELMET();
     return helmet;
   }
 

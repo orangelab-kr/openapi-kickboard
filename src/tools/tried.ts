@@ -1,4 +1,4 @@
-import { InternalError, OPCODE, logger } from '.';
+import { logger, RESULT } from '.';
 
 export async function Tried<T>(cb: () => Promise<T | undefined>): Promise<T> {
   const tried = 2;
@@ -15,6 +15,7 @@ export async function Tried<T>(cb: () => Promise<T | undefined>): Promise<T> {
     }
   }
 
-  logger.warn(`[Tried] Processing failure. ${error.message} (final)`);
-  throw new InternalError(error.message, OPCODE.ERROR);
+  const { message } = error;
+  logger.warn(`[Tried] Processing failure. ${message} (final)`);
+  throw RESULT.INVALID_ERROR({ details: { message } });
 }

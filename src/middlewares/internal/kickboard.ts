@@ -1,16 +1,10 @@
-import { Callback, InternalError, Kickboard, OPCODE, Wrapper } from '../..';
+import { Kickboard, RESULT, Wrapper, WrapperCallback } from '../..';
 
-export function InternalKickboardMiddleware(): Callback {
+export function InternalKickboardMiddleware(): WrapperCallback {
   const { kickboardService } = Kickboard;
   return Wrapper(async (req, res, next) => {
     const { kickboardCode } = req.params;
-    if (!kickboardCode) {
-      throw new InternalError(
-        '해당 킥보드를 찾을 수 없습니다.',
-        OPCODE.NOT_FOUND
-      );
-    }
-
+    if (!kickboardCode) throw RESULT.CANNOT_FIND_KICKBOARD();
     const code = kickboardCode.toUpperCase();
     req.internal.kickboard = await Kickboard.getKickboardDocOrThrow(code);
 

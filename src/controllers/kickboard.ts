@@ -4,7 +4,6 @@ import {
   Geometry,
   Helmet,
   InternalClient,
-  InternalError,
   Joi,
   KickboardCollect,
   KickboardDoc,
@@ -17,7 +16,7 @@ import {
   KickboardQueryRadiusLocation,
   KickboardQueryToShort,
   logger,
-  OPCODE,
+  RESULT,
   Tried,
 } from '..';
 
@@ -45,7 +44,7 @@ export class Kickboard {
     });
 
     await this.kickboardService.connect();
-    logger.info('[Kickboard] 킥보드 서비스와 연결되었습니다.');
+    logger.info('Kickboard / 킥보드 서비스와 연결되었습니다.');
   }
 
   public static async removeKickboard(kickboardCode: string): Promise<void> {
@@ -70,13 +69,7 @@ export class Kickboard {
 
     if (!details) query.push(...KickboardQueryToShort());
     const kickboard = await KickboardModel.aggregate(query);
-    if (kickboard.length <= 0) {
-      throw new InternalError(
-        '해당 킥보드를 찾을 수 없습니다.',
-        OPCODE.NOT_FOUND
-      );
-    }
-
+    if (kickboard.length <= 0) throw RESULT.CANNOT_FIND_KICKBOARD();
     return kickboard[0];
   }
 
@@ -123,13 +116,7 @@ export class Kickboard {
     kickboardCode: string
   ): Promise<KickboardDoc> {
     const kickboard = await Kickboard.getKickboardDoc(kickboardCode);
-    if (!kickboard) {
-      throw new InternalError(
-        '해당 킥보드를 찾을 수 없습니다.',
-        OPCODE.NOT_FOUND
-      );
-    }
-
+    if (!kickboard) throw RESULT.CANNOT_FIND_KICKBOARD();
     return kickboard;
   }
 
@@ -245,37 +232,22 @@ export class Kickboard {
     ) {
       const hasKickboardId = await Kickboard.getKickboardDocById(kickboardId);
       if (hasKickboardId) {
-        throw new InternalError(
-          `${kickboardId} 킥보드는 이미 ${hasKickboardId.kickboardCode}가 사용하고 있습니다.`,
-          OPCODE.ALREADY_EXISTS
-        );
+        throw RESULT.ALREADY_USING_KICKBOARD({
+          args: [kickboardId, hasKickboardId.kickboardCode],
+        });
       }
     }
 
     if (franchiseId) {
-      try {
-        await InternalClient.getFranchise([
-          FranchisePermission.FRANCHISES_VIEW,
-        ]).getFranchise(franchiseId);
-      } catch (err: any) {
-        throw new InternalError(
-          `${franchiseId} 프렌차이즈를 찾을 수 없습니다.`,
-          OPCODE.NOT_FOUND
-        );
-      }
+      await InternalClient.getFranchise([
+        FranchisePermission.FRANCHISES_VIEW,
+      ]).getFranchise(franchiseId);
     }
 
     if (regionId) {
-      try {
-        await InternalClient.getLocation([
-          LocationPermission.REGIONS_VIEW,
-        ]).getRegion(regionId);
-      } catch (err: any) {
-        throw new InternalError(
-          `${regionId} 지역을 찾을 수 없습니다.`,
-          OPCODE.NOT_FOUND
-        );
-      }
+      await InternalClient.getLocation([
+        LocationPermission.REGIONS_VIEW,
+      ]).getRegion(regionId);
     }
 
     const where = { kickboardCode };
@@ -297,20 +269,14 @@ export class Kickboard {
       await KickboardModel.updateOne(where, data);
     } else {
       if (!kickboardId || !franchiseId || !regionId) {
-        throw new InternalError(
-          '킥보드 ID, 프렌차이즈 ID, 지역 ID를 모두 입력해야 합니다.',
-          OPCODE.ERROR
-        );
+        throw RESULT.REQUIRED_KICKBOARD_DATA();
       }
 
       await KickboardModel.create(data);
     }
 
     const kickboard = await Kickboard.getKickboardDoc(kickboardCode);
-    if (!kickboard) {
-      throw new InternalError('킥보드를 등록 또는 수정할 수 없습니다.');
-    }
-
+    if (!kickboard) throw RESULT.CANNOT_SET_KICKBOARD();
     return kickboard;
   }
 
