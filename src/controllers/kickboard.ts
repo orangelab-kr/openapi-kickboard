@@ -2,8 +2,9 @@ import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
 import {
   Geometry,
+  getFranchise,
+  getLocation,
   Helmet,
-  InternalClient,
   Joi,
   KickboardCollect,
   KickboardDoc,
@@ -239,15 +240,13 @@ export class Kickboard {
     }
 
     if (franchiseId) {
-      await InternalClient.getFranchise([
-        FranchisePermission.FRANCHISES_VIEW,
-      ]).getFranchise(franchiseId);
+      await getFranchise([FranchisePermission.FRANCHISES_VIEW]).getFranchise(
+        franchiseId
+      );
     }
 
     if (regionId) {
-      await InternalClient.getLocation([
-        LocationPermission.REGIONS_VIEW,
-      ]).getRegion(regionId);
+      await getLocation([LocationPermission.REGIONS_VIEW]).getRegion(regionId);
     }
 
     const where = { kickboardCode };

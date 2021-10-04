@@ -1,8 +1,8 @@
 import {
   InternalPermissionMiddleware,
   Light,
-  OPCODE,
   PERMISSION,
+  RESULT,
   Wrapper,
 } from '../../..';
 

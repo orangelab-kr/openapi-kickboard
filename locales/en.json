@@ -1,0 +1,16 @@
+{
+  "REQUIRED_ACCESS_KEY": "This service requires authentication.",
+  "EXPIRED_ACCESS_KEY": "Your access token has expired.",
+  "PERMISSION_DENIED": "You do not have permission. (%s)",
+  "REQUIRED_LOGIN": "This service requires a login.",
+  "INVALID_ERROR": "An unknown error has occurred.",
+  "FAILED_VALIDATE": "Please enter the correct information.",
+  "INVALID_API": "Invalid API address.",
+  "ALREADY_REGISTERED_HELMET": "This helmet has already been registered.",
+  "CANNOT_FIND_HELMET": "The helmet does not exist.",
+  "CANNOT_FIND_KICKBOARD": "The kickboard does not exist.",
+  "ALREADY_USING_KICKBOARD": "The %s kickboard is already in use by %s.",
+  "CANNOT_SET_KICKBOARD": "You cannot register or edit a kickboard.",
+  "REQUIRED_KICKBOARD_DATA": "Both your kickboard ID, franchise ID and local ID are required.",
+  "HELMET_HAS_KICKBOARD": "The helmet is linked to the kickboard."
+}

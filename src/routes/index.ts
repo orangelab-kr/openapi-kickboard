@@ -6,7 +6,6 @@ import {
   Kickboard,
   KickboardMiddleware,
   KickboardMode,
-  OPCODE,
   PlatformMiddleware,
   RESULT,
   Wrapper,

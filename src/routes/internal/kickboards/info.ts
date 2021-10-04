@@ -1,13 +1,12 @@
+import { Router } from 'express';
+import { PacketInfo } from 'kickboard-sdk';
 import {
   Info,
   InternalPermissionMiddleware,
-  OPCODE,
   PERMISSION,
+  RESULT,
   Wrapper,
 } from '../../..';
-
-import { PacketInfo } from 'kickboard-sdk';
-import { Router } from 'express';
 
 export function getInternalKickboardsInfoRouter(): Router {
   const router = Router();
