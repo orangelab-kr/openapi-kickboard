@@ -16,6 +16,6 @@ export async function Tried<T>(cb: () => Promise<T | undefined>): Promise<T> {
   }
 
   const { message } = error;
-  logger.warn(`[Tried] Processing failure. ${message} (final)`);
+  logger.warn(`Tried / Processing failure. ${message} (final)`);
   throw RESULT.INVALID_ERROR({ details: { message } });
 }

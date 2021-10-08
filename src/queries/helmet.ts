@@ -53,8 +53,13 @@ export const HelmetQueryByHelmetId = (helmetId: string) => [
 ];
 
 export const HelmetQuerySearch = (search: string) => {
-  const $regex = new RegExp(search);
-  return [{ $or: [{ _id: { $regex } }, { macAddress: { $regex } }] }];
+  return [
+    {
+      $match: {
+        $or: [{ _id: { $regex: search } }, { macAddress: { $regex: search } }],
+      },
+    },
+  ];
 };
 
 export const HelmetQueryStatus = (status: HelmetStatus[]) => [
