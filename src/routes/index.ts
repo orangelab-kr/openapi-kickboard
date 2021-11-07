@@ -55,7 +55,7 @@ export function getRouter(): Router {
     Wrapper(async (req) => {
       const { kickboard, kickboardClient } = req;
       const opts = { kickboard, kickboardClient };
-      const timeline = await Kickboard.getLastRideTimeline(opts, false);
+      const timeline = await Kickboard.getLatestRideTimeline(opts, false);
       throw RESULT.SUCCESS({ details: { timeline } });
     })
   );

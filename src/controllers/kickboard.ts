@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { KickboardClient, KickboardService } from 'kickboard-sdk';
+import { FilterQuery } from 'mongoose';
 import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
 import { Status } from '.';
 import {
@@ -15,6 +16,7 @@ import {
   KickboardMode,
   KickboardModel,
   KickboardQueryKickboardCode,
+  KickboardQueryKickboardFranchiseIds,
   KickboardQueryLookupStatus,
   KickboardQueryMode,
   KickboardQueryRadiusLocation,
@@ -71,7 +73,7 @@ export class Kickboard {
     return kickboard;
   }
 
-  public static async getLastRideTimeline<T extends true | false>(
+  public static async getLatestRideTimeline<T extends true | false>(
     props: {
       kickboard: KickboardDoc;
       kickboardClient: KickboardClient;
@@ -121,23 +123,28 @@ export class Kickboard {
       lng?: number;
       radius?: number;
       status?: KickboardMode[];
+      franchiseIds?: string[];
     },
     details: T
   ): Promise<{
     total: number;
     kickboards: (T extends true ? Kickboard : KickboardShort)[];
   }> {
-    const schema = Joi.object({
+    const query: any = [];
+    const { lat, lng, radius, status, franchiseIds } = await Joi.object({
       lat: Joi.number().min(-90).max(90).required(),
       lng: Joi.number().min(-180).max(180).required(),
       status: Joi.array().items(Joi.number().required()).optional(),
-      radius: Joi.number().min(10).max(5000).default(1000).required(),
-    });
+      radius: Joi.number().min(10).max(20000).default(1000).required(),
+      franchiseIds: Joi.array().items(Joi.string().uuid()).optional(),
+    }).validateAsync(props);
 
-    const query: any = [];
-    const { lat, lng, radius, status } = await schema.validateAsync(props);
     const { low, high } = Geometry.getRect({ lat, lng, radius });
     if (status) query.push(...KickboardQueryMode(...status));
+    if (franchiseIds) {
+      query.push(...KickboardQueryKickboardFranchiseIds(franchiseIds));
+    }
+
     query.push(...KickboardQueryLookupStatus());
     query.push(...KickboardQueryRadiusLocation(low, high));
     if (!details) query.push(...KickboardQueryToShort());
@@ -193,6 +200,7 @@ export class Kickboard {
     search?: number;
     orderByField?: 'kickboardId' | 'kickboardCode' | 'createdAt' | 'updatedAt';
     orderBySort?: 'asc' | 'desc';
+    franchiseIds?: string[];
   }): Promise<{ total: number; kickboards: KickboardDoc[] }> {
     const schema = Joi.object({
       take: Joi.number().default(10).optional(),
@@ -203,16 +211,18 @@ export class Kickboard {
         .valid('kickboardId', 'kickboardCode', 'createdAt', 'updatedAt')
         .optional(),
       orderBySort: Joi.string().default('desc').valid('asc', 'desc').optional(),
+      franchiseIds: Joi.array().items(Joi.string().uuid()).optional(),
     });
 
-    const { take, skip, search, orderBySort, orderByField } =
+    const { take, skip, search, orderBySort, orderByField, franchiseIds } =
       await schema.validateAsync(props);
     const $regex = new RegExp(search);
-    const where = {
+    const where: FilterQuery<KickboardDoc> = {
       $or: [{ kickboardId: { $regex } }, { kickboardCode: { $regex } }],
     };
 
     const sort = { [orderByField]: orderBySort };
+    if (franchiseIds) where.franchiseId = { $in: franchiseIds };
     const [total, kickboards] = await Promise.all([
       KickboardModel.countDocuments(where),
       KickboardModel.find(where).limit(take).skip(skip).sort(sort),

@@ -9,6 +9,10 @@ export const KickboardQueryKickboardCode = (kickboardCode: string) => [
   { $match: { kickboardCode: kickboardCode.toUpperCase() } },
 ];
 
+export const KickboardQueryKickboardFranchiseIds = (franchiseIds: string[]) => [
+  { $match: { franchiseId: { $in: franchiseIds } } },
+];
+
 export const KickboardQueryLookupStatus = () => [
   {
     $lookup: {
@@ -43,6 +47,7 @@ export const KickboardQueryToShort = () => [
     $project: {
       _id: 0,
       kickboardCode: 1,
+      kickboardId: 1,
       photo: 1,
       lost: 1,
       helmetId: 1,

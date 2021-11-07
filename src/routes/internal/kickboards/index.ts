@@ -158,7 +158,7 @@ export function getInternalKickboardsRouter() {
     Wrapper(async (req) => {
       const { kickboard, kickboardClient } = req.internal;
       const opts = { kickboard, kickboardClient };
-      const timeline = await Kickboard.getLastRideTimeline(opts, true);
+      const timeline = await Kickboard.getLatestRideTimeline(opts, true);
       throw RESULT.SUCCESS({ details: { timeline } });
     })
   );
