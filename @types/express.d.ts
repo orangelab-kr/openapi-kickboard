@@ -16,6 +16,7 @@ declare global {
         user?: InternalPlatformUser;
       };
       kickboard: KickboardShort;
+      kickboardClient: KickboardClient;
       internal: {
         sub: string;
         iss: string;

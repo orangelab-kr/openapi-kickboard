@@ -6,9 +6,11 @@ import {
   InternalKickboardClient,
   InternalLocationClient,
   InternalPlatformClient,
+  InternalRideClient,
   KickboardPermission,
   LocationPermission,
   PlatformPermission,
+  RidePermission,
 } from 'openapi-internal-sdk';
 
 export function getDiscount(
@@ -73,6 +75,20 @@ export function getLocation(
 ): InternalLocationClient {
   const client = new InternalLocationClient({
     secretKey: process.env.HIKICK_OPENAPI_LOCATION_KEY || '',
+    issuer: process.env.HIKICK_OPENAPI_ISSUER || '',
+    permissions,
+    email,
+  });
+
+  return client;
+}
+
+export function getRide(
+  permissions?: RidePermission[],
+  email = 'system@hikick.kr'
+): InternalRideClient {
+  const client = new InternalRideClient({
+    secretKey: process.env.HIKICK_OPENAPI_RIDE_KEY || '',
     issuer: process.env.HIKICK_OPENAPI_ISSUER || '',
     permissions,
     email,

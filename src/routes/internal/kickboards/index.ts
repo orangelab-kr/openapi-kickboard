@@ -34,7 +34,7 @@ export function getInternalKickboardsRouter() {
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_LOOKUP_DETAIL),
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_SEARCH_LIST),
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { query } = req;
       const { total, kickboards } = await Kickboard.getKickboardDocs(query);
       throw RESULT.SUCCESS({ details: { kickboards, total } });
@@ -47,7 +47,7 @@ export function getInternalKickboardsRouter() {
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_LOOKUP_DETAIL),
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_SEARCH_LIST),
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { query } = req;
       const { total, kickboards } = await Kickboard.getKickboardByHelmetUnmount(
         query
@@ -62,7 +62,7 @@ export function getInternalKickboardsRouter() {
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_LOOKUP_DETAIL),
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_SEARCH_NEAR),
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { query } = req;
       const { total, kickboards } = await Kickboard.getNearKickboards(
         query,
@@ -78,7 +78,7 @@ export function getInternalKickboardsRouter() {
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_LOOKUP_DETAIL),
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
     InternalKickboardMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboard } = req.internal;
       throw RESULT.SUCCESS({ details: { kickboard } });
     })
@@ -87,7 +87,7 @@ export function getInternalKickboardsRouter() {
   router.post(
     '/:kickboardCode',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_SET),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { body, params } = req;
       const kickboard = await Kickboard.setKickboard(
         params.kickboardCode,
@@ -101,7 +101,7 @@ export function getInternalKickboardsRouter() {
   router.delete(
     '/:kickboardCode',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_SET),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       await Kickboard.removeKickboard(req.params.kickboardCode);
       throw RESULT.SUCCESS();
     })
@@ -111,7 +111,7 @@ export function getInternalKickboardsRouter() {
     '/:kickboardCode/start',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_START),
     InternalKickboardMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient, kickboard } = req.internal;
       await Kickboard.start(kickboard, kickboardClient);
       throw RESULT.SUCCESS();
@@ -122,7 +122,7 @@ export function getInternalKickboardsRouter() {
     '/:kickboardCode/stop',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_STOP),
     InternalKickboardMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient, kickboard } = req.internal;
       await Kickboard.stop(kickboard, kickboardClient);
       throw RESULT.SUCCESS();
@@ -133,7 +133,7 @@ export function getInternalKickboardsRouter() {
     '/:kickboardCode/lock',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_LOCK),
     InternalKickboardMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Kickboard.lock(kickboardClient);
       throw RESULT.SUCCESS();
@@ -144,7 +144,7 @@ export function getInternalKickboardsRouter() {
     '/:kickboardCode/unlock',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_UNLOCK),
     InternalKickboardMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Kickboard.unlock(kickboardClient);
       throw RESULT.SUCCESS();
@@ -152,10 +152,22 @@ export function getInternalKickboardsRouter() {
   );
 
   router.get(
+    '/:kickboardCode/timeline',
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_TIMELINE),
+    InternalKickboardMiddleware(),
+    Wrapper(async (req) => {
+      const { kickboard, kickboardClient } = req.internal;
+      const opts = { kickboard, kickboardClient };
+      const timeline = await Kickboard.getLastRideTimeline(opts, true);
+      throw RESULT.SUCCESS({ details: { timeline } });
+    })
+  );
+
+  router.get(
     '/:kickboardCode/reboot',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_REBOOT),
     InternalKickboardMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Kickboard.reboot(kickboardClient);
       throw RESULT.SUCCESS();

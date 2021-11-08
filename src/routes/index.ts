@@ -27,7 +27,7 @@ export function getRouter(): Router {
   router.get(
     '/near',
     PlatformMiddleware({ permissionIds: ['kickboards.list'], final: true }),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { query } = req;
       const { total, kickboards } = await Kickboard.getNearKickboards(
         { ...query, status: [KickboardMode.READY] },
@@ -42,9 +42,21 @@ export function getRouter(): Router {
     '/:kickboardCode',
     PlatformMiddleware({ permissionIds: ['kickboards.view'], final: true }),
     KickboardMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboard } = req;
       throw RESULT.SUCCESS({ details: { kickboard } });
+    })
+  );
+
+  router.get(
+    '/:kickboardCode/timeline',
+    PlatformMiddleware({ permissionIds: ['kickboards.timeline'], final: true }),
+    KickboardMiddleware(),
+    Wrapper(async (req) => {
+      const { kickboard, kickboardClient } = req;
+      const opts = { kickboard, kickboardClient };
+      const timeline = await Kickboard.getLastRideTimeline(opts, false);
+      throw RESULT.SUCCESS({ details: { timeline } });
     })
   );
 

@@ -1,9 +1,12 @@
+import dayjs from 'dayjs';
 import { KickboardClient, KickboardService } from 'kickboard-sdk';
 import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
+import { Status } from '.';
 import {
   Geometry,
   getFranchise,
   getLocation,
+  getRide,
   Helmet,
   Joi,
   KickboardCollect,
@@ -12,17 +15,27 @@ import {
   KickboardMode,
   KickboardModel,
   KickboardQueryKickboardCode,
+  KickboardQueryKickboardFranchiseIds,
   KickboardQueryLookupStatus,
   KickboardQueryMode,
   KickboardQueryRadiusLocation,
   KickboardQueryToShort,
   logger,
   RESULT,
+  StatusDoc,
   Tried,
 } from '..';
 
+export interface RideTimeline {
+  latitude: number;
+  longitude: number;
+  battery: number;
+  createdAt: Date;
+}
+
 export interface KickboardShort {
   kickboardCode: string;
+  kickboardId: string;
   lost: number;
   status: {
     power: { scooter: { battery: number } };
@@ -57,6 +70,35 @@ export class Kickboard {
   ): Promise<KickboardDoc | null> {
     const kickboard = await KickboardModel.findOne({ kickboardId });
     return kickboard;
+  }
+
+  public static async getLastRideTimeline<T extends true | false>(
+    props: {
+      kickboard: KickboardDoc;
+      kickboardClient: KickboardClient;
+    },
+    details: T
+  ): Promise<T extends true ? StatusDoc[] : RideTimeline[]> {
+    const { kickboardClient, kickboard } = props;
+    const { kickboardCode } = kickboard;
+    const { terminatedAt } = await getRide()
+      .instance.get('/rides', { params: { take: 2, kickboardCode } })
+      .then(({ data }) => data.rides.find((ride: any) => ride.terminatedAt));
+
+    const endedAt = new Date(terminatedAt);
+    const startedAt = dayjs(terminatedAt).subtract(2, 'minutes').toDate();
+    const timeline: any = await Status.getStatusBySpecificTime(
+      kickboardClient,
+      { startedAt, endedAt }
+    );
+
+    if (details) return timeline;
+    return timeline.map(({ gps, power, createdAt }: any) => ({
+      latitude: gps.latitude,
+      longitude: gps.longitude,
+      battery: power.scooter.battery,
+      createdAt,
+    }));
   }
 
   public static async getKickboard<T extends true | false>(
