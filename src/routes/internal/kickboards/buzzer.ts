@@ -13,7 +13,7 @@ export function getInternalKickboardsBuzzerRouter(): Router {
   router.get(
     '/on',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_BUZZER_ON),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Buzzer.buzzerOn(kickboardClient, req.query);
       throw RESULT.SUCCESS();
@@ -23,7 +23,7 @@ export function getInternalKickboardsBuzzerRouter(): Router {
   router.get(
     '/off',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_BATTERY_UNLOCK),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Buzzer.buzzerOff(kickboardClient);
       throw RESULT.SUCCESS();

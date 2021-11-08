@@ -5,7 +5,7 @@ import {
   InternalPermissionMiddleware,
   PERMISSION,
   RESULT,
-  Wrapper
+  Wrapper,
 } from '../../..';
 
 export function getInternalKickboardsBatteryRouter(): Router {
@@ -14,7 +14,7 @@ export function getInternalKickboardsBatteryRouter(): Router {
   router.get(
     '/',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       const battery = await Battery.getBattery(kickboardClient);
       throw RESULT.SUCCESS({ details: { battery } });
@@ -24,7 +24,7 @@ export function getInternalKickboardsBatteryRouter(): Router {
   router.post(
     '/',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_REFRESH),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       const battery = await Battery.refreshBattery(kickboardClient);
       throw RESULT.SUCCESS({ details: { battery } });
@@ -34,7 +34,7 @@ export function getInternalKickboardsBatteryRouter(): Router {
   router.get(
     '/lock',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_BATTERY_LOCK),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Battery.batteryLock(kickboardClient);
       throw RESULT.SUCCESS();
@@ -44,7 +44,7 @@ export function getInternalKickboardsBatteryRouter(): Router {
   router.get(
     '/unlock',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_BATTERY_UNLOCK),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Battery.batteryUnlock(kickboardClient);
       throw RESULT.SUCCESS();

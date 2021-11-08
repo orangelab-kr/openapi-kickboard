@@ -12,7 +12,7 @@ export function getInternalHelmetsRouter() {
 
   router.get(
     '/',
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { helmets, total } = await Helmet.getHelmets(req.query);
       throw RESULT.SUCCESS({ details: { helmets, total } });
     })
@@ -20,7 +20,7 @@ export function getInternalHelmetsRouter() {
 
   router.post(
     '/',
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const helmet = await Helmet.createHelmet(req.body);
       throw RESULT.SUCCESS({ details: { helmet } });
     })
@@ -29,7 +29,7 @@ export function getInternalHelmetsRouter() {
   router.post(
     '/:helmetId',
     InternalHelmetMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { internal, body } = req;
       const helmet = await Helmet.modifyHelmet(internal.helmet, body);
       throw RESULT.SUCCESS({ details: { helmet } });
@@ -39,7 +39,7 @@ export function getInternalHelmetsRouter() {
   router.get(
     '/:helmetId',
     InternalHelmetMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { helmet } = req.internal;
       throw RESULT.SUCCESS({ details: { helmet } });
     })
@@ -48,7 +48,7 @@ export function getInternalHelmetsRouter() {
   router.get(
     '/byMac/:macAddress',
     InternalHelmetByMacMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { helmet } = req.internal;
       throw RESULT.SUCCESS({ details: { helmet } });
     })
@@ -57,7 +57,7 @@ export function getInternalHelmetsRouter() {
   router.delete(
     '/:helmetId',
     InternalHelmetMiddleware(),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       await Helmet.deleteHelmet(req.internal.helmet);
       throw RESULT.SUCCESS();
     })

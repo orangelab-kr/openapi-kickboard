@@ -5,7 +5,7 @@ import { ValidationError } from 'joi';
 import { logger, RESULT } from '.';
 
 i18n.configure({
-  defaultLocale: 'en',
+  defaultLocale: 'ko',
   locales: ['en', 'ko'],
   directory: 'locales',
   updateFiles: false,

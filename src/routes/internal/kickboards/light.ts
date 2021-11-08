@@ -14,7 +14,7 @@ export function getInternalKickboardsLightRouter(): Router {
   router.get(
     '/on',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_LIGHT_ON),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Light.lightOn(kickboardClient, req.query);
       throw RESULT.SUCCESS();
@@ -24,7 +24,7 @@ export function getInternalKickboardsLightRouter(): Router {
   router.get(
     '/off',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_LIGHT_OFF),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Light.lightOff(kickboardClient);
       throw RESULT.SUCCESS();

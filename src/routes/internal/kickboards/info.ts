@@ -14,7 +14,7 @@ export function getInternalKickboardsInfoRouter(): Router {
   router.get(
     '/',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       const info = await Info.getInfo(kickboardClient);
       throw RESULT.SUCCESS({ details: { info } });
@@ -24,7 +24,7 @@ export function getInternalKickboardsInfoRouter(): Router {
   router.post(
     '/',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_REFRESH),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       const info = await Info.refreshInfo(kickboardClient);
       throw RESULT.SUCCESS({ details: { info } });

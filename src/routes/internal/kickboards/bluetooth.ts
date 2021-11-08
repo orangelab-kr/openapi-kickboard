@@ -13,7 +13,7 @@ export function getInternalKickboardsBluetoothRouter(): Router {
   router.get(
     '/on',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_BLUETOOTH_ON),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Bluetooth.bluetoothOn(kickboardClient);
       throw RESULT.SUCCESS();
@@ -23,7 +23,7 @@ export function getInternalKickboardsBluetoothRouter(): Router {
   router.get(
     '/off',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_ACTION_BLUETOOTH_OFF),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       await Bluetooth.bluetoothOff(kickboardClient);
       throw RESULT.SUCCESS();

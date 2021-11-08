@@ -10,6 +10,6 @@ export function InternalKickboardMiddleware(): WrapperCallback {
 
     const { kickboardId } = req.internal.kickboard;
     req.internal.kickboardClient = kickboardService.getKickboard(kickboardId);
-    await next();
+    next();
   });
 }

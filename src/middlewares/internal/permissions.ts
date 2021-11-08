@@ -51,6 +51,6 @@ export function InternalPermissionMiddleware(
       throw RESULT.PERMISSION_DENIED({ args: [PERMISSION[permission]] });
     }
 
-    await next();
+    next();
   });
 }

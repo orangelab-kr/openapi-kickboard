@@ -14,7 +14,7 @@ export function getInternalKickboardsStatusRouter(): Router {
   router.get(
     '/',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       const status = await Status.getStatus(kickboardClient);
       throw RESULT.SUCCESS({ details: { status } });
@@ -24,7 +24,7 @@ export function getInternalKickboardsStatusRouter(): Router {
   router.get(
     '/timeline',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_TIMELINE),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       const status = await Status.getStatusBySpecificTime(
         kickboardClient,
@@ -38,7 +38,7 @@ export function getInternalKickboardsStatusRouter(): Router {
   router.post(
     '/',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_REFRESH),
-    Wrapper(async (req, res) => {
+    Wrapper(async (req) => {
       const { kickboardClient } = req.internal;
       const status = await Status.refreshStatus(kickboardClient);
       throw RESULT.SUCCESS({ details: { status } });

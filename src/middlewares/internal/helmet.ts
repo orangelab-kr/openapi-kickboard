@@ -5,7 +5,7 @@ export function InternalHelmetMiddleware(): WrapperCallback {
     const { helmetId } = req.params;
     if (!helmetId) throw RESULT.CANNOT_FIND_HELMET();
     req.internal.helmet = await Helmet.getHelmetOrThrow(helmetId);
-    await next();
+    next();
   });
 }
 
@@ -14,6 +14,6 @@ export function InternalHelmetByMacMiddleware(): WrapperCallback {
     const { macAddress } = req.params;
     if (!macAddress) throw RESULT.CANNOT_FIND_HELMET();
     req.internal.helmet = await Helmet.getHelmetByMacOrThrow(macAddress);
-    await next();
+    next();
   });
 }
