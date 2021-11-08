@@ -15,7 +15,6 @@ import {
   KickboardMode,
   KickboardModel,
   KickboardQueryKickboardCode,
-  KickboardQueryKickboardFranchiseIds,
   KickboardQueryLookupStatus,
   KickboardQueryMode,
   KickboardQueryRadiusLocation,
