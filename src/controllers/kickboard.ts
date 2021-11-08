@@ -282,13 +282,15 @@ export class Kickboard {
     }
 
     if (franchiseId) {
-      await getFranchise([FranchisePermission.FRANCHISES_VIEW]).getFranchise(
+      await getFranchise([FranchisePermission.FRANCHISE_VIEW]).getFranchise(
         franchiseId
       );
     }
 
     if (regionId) {
-      await getLocation([LocationPermission.REGIONS_VIEW]).getRegion(regionId);
+      await getLocation([LocationPermission.LOCATION_REGION_VIEW]).getRegion(
+        regionId
+      );
     }
 
     const where = { kickboardCode };
