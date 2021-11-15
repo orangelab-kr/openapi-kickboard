@@ -77,7 +77,7 @@ export function getInternalKickboardsRouter() {
     '/:kickboardCode',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_LOOKUP_DETAIL),
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
-    InternalKickboardMiddleware(),
+    InternalKickboardMiddleware(true),
     Wrapper(async (req) => {
       const { kickboard } = req.internal;
       throw RESULT.SUCCESS({ details: { kickboard } });
