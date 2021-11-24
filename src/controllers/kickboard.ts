@@ -135,7 +135,7 @@ export class Kickboard {
       lat: Joi.number().min(-90).max(90).required(),
       lng: Joi.number().min(-180).max(180).required(),
       status: Joi.array().items(Joi.number().required()).optional(),
-      radius: Joi.number().min(10).max(20000).default(1000).required(),
+      radius: Joi.number().min(10).max(400000).default(1000).required(),
       franchiseIds: Joi.array().items(Joi.string().uuid()).optional(),
     }).validateAsync(props);
 

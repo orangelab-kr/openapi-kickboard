@@ -1,11 +1,7 @@
 import { S2LatLng, S2LatLngRect } from 'nodes2ts';
 
 export class Geometry {
-  public static getRect(props: {
-    lat: number;
-    lng: number;
-    radius: number;
-  }): {
+  public static getRect(props: { lat: number; lng: number; radius: number }): {
     low: { lat: number; lng: number };
     high: { lat: number; lng: number };
   } {
@@ -51,5 +47,14 @@ export class Geometry {
         lng: parseFloat(hi.lngDegrees.toFixed(5)),
       },
     };
+  }
+
+  public static getDistance(
+    firstLoc: { lat: number; lng: number },
+    secondLoc: { lat: number; lng: number }
+  ): number {
+    const firstLatLng = S2LatLng.fromDegrees(firstLoc.lat, firstLoc.lng);
+    const secondLatLng = S2LatLng.fromDegrees(secondLoc.lat, secondLoc.lng);
+    return firstLatLng.getEarthDistance(secondLatLng);
   }
 }
