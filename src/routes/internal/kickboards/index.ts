@@ -36,7 +36,7 @@ export function getInternalKickboardsRouter() {
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_METHOD_LATEST),
     Wrapper(async (req) => {
       const { query } = req;
-      const { total, kickboards } = await Kickboard.getKickboardDocs(query);
+      const { total, kickboards } = await Kickboard.getKickboards(query);
       throw RESULT.SUCCESS({ details: { kickboards, total } });
     })
   );

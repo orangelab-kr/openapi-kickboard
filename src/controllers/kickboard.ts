@@ -8,6 +8,7 @@ import {
   getFranchise,
   getLocation,
   getRide,
+  GlobalQueryPagnation,
   Helmet,
   Joi,
   KickboardCollect,
@@ -20,6 +21,8 @@ import {
   KickboardQueryLookupStatus,
   KickboardQueryMode,
   KickboardQueryRadiusLocation,
+  KickboardQuerySearch,
+  KickboardQuerySort,
   KickboardQueryToShort,
   logger,
   RESULT,
@@ -128,13 +131,13 @@ export class Kickboard {
     details: T
   ): Promise<{
     total: number;
-    kickboards: (T extends true ? Kickboard : KickboardShort)[];
+    kickboards: (T extends true ? KickboardDoc : KickboardShort)[];
   }> {
     const query: any = [];
     const { lat, lng, radius, status, franchiseIds } = await Joi.object({
       lat: Joi.number().min(-90).max(90).required(),
       lng: Joi.number().min(-180).max(180).required(),
-      status: Joi.array().items(Joi.number().required()).optional(),
+      status: Joi.array().items(Joi.number()).single().optional(),
       radius: Joi.number().min(10).max(400000).default(1000).required(),
       franchiseIds: Joi.array().items(Joi.string().uuid()).optional(),
     }).validateAsync(props);
@@ -194,18 +197,28 @@ export class Kickboard {
     return { total, kickboards };
   }
 
-  public static async getKickboardDocs(props: {
+  public static async getKickboards<T extends true | false>(props: {
     take?: number;
     skip?: number;
     search?: number;
+    mode?: KickboardMode[];
+    status?: T;
     orderByField?: 'kickboardId' | 'kickboardCode' | 'createdAt' | 'updatedAt';
     orderBySort?: 'asc' | 'desc';
     franchiseIds?: string[];
-  }): Promise<{ total: number; kickboards: KickboardDoc[] }> {
+  }): Promise<{
+    total: number;
+    kickboards: (T extends true
+      ? KickboardDoc & { status: StatusDoc }
+      : KickboardDoc)[];
+  }> {
+    const query: any = [];
     const schema = Joi.object({
       take: Joi.number().default(10).optional(),
       skip: Joi.number().default(0).optional(),
       search: Joi.string().default('').allow('').optional(),
+      mode: Joi.array().items(Joi.number()).single().optional(),
+      status: Joi.boolean().default(false).optional(),
       orderByField: Joi.string()
         .default('kickboardId')
         .valid('kickboardId', 'kickboardCode', 'createdAt', 'updatedAt')
@@ -214,21 +227,27 @@ export class Kickboard {
       franchiseIds: Joi.array().items(Joi.string().uuid()).optional(),
     });
 
-    const { take, skip, search, orderBySort, orderByField, franchiseIds } =
-      await schema.validateAsync(props);
-    const $regex = new RegExp(search);
-    const where: FilterQuery<KickboardDoc> = {
-      $or: [{ kickboardId: { $regex } }, { kickboardCode: { $regex } }],
-    };
+    const {
+      take,
+      skip,
+      search,
+      orderBySort,
+      orderByField,
+      status,
+      mode,
+      franchiseIds,
+    } = await schema.validateAsync(props);
+    if (mode) query.push(...KickboardQueryMode(...mode));
+    if (franchiseIds) {
+      query.push(...KickboardQueryKickboardFranchiseIds(franchiseIds));
+    }
 
-    const sort = { [orderByField]: orderBySort };
-    if (franchiseIds) where.franchiseId = { $in: franchiseIds };
-    const [total, kickboards] = await Promise.all([
-      KickboardModel.countDocuments(where),
-      KickboardModel.find(where).limit(take).skip(skip).sort(sort),
-    ]);
-
-    return { total, kickboards };
+    if (search) query.push(...KickboardQuerySearch(search));
+    query.push(...KickboardQuerySort({ orderByField, orderBySort }));
+    if (status) query.push(...KickboardQueryLookupStatus(true));
+    query.push(...GlobalQueryPagnation('kickboards', take, skip));
+    const res = await KickboardModel.aggregate(query);
+    return res[0];
   }
 
   public static async setKickboard(

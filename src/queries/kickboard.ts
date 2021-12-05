@@ -13,7 +13,29 @@ export const KickboardQueryKickboardFranchiseIds = (franchiseIds: string[]) => [
   { $match: { franchiseId: { $in: franchiseIds } } },
 ];
 
-export const KickboardQueryLookupStatus = () => [
+export const KickboardQuerySearch = (search: string) => [
+  {
+    $match: {
+      $or: [
+        { kickboardId: { $regex: new RegExp(search) } },
+        { kickboardCode: { $regex: new RegExp(search) } },
+      ],
+    },
+  },
+];
+
+export const KickboardQuerySort = (props: {
+  orderByField: string;
+  orderBySort: string;
+}) => [
+  {
+    $sort: {
+      [props.orderByField]: props.orderBySort === 'asc' ? 1 : -1,
+    },
+  },
+];
+
+export const KickboardQueryLookupStatus = (hideIfNoStatus = false) => [
   {
     $lookup: {
       from: 'status',
@@ -25,7 +47,7 @@ export const KickboardQueryLookupStatus = () => [
   {
     $unwind: {
       path: '$status',
-      preserveNullAndEmptyArrays: true,
+      preserveNullAndEmptyArrays: !hideIfNoStatus,
     },
   },
 ];
