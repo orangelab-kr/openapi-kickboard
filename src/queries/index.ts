@@ -9,7 +9,10 @@ export const GlobalQueryPagnation = (
   {
     $facet: {
       metadata: [{ $count: 'total' }],
-      [field]: [{ $limit: take }, { $skip: skip }],
+      [field]:
+        take > 0
+          ? [{ $skip: skip }, { $limit: take }]
+          : [{ $match: { _id: { $eq: null } } }],
     },
   },
   {

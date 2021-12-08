@@ -125,7 +125,7 @@ export class Kickboard {
       lat?: number;
       lng?: number;
       radius?: number;
-      status?: KickboardMode[];
+      mode?: KickboardMode[];
       franchiseIds?: string[];
     },
     details: T
@@ -134,16 +134,16 @@ export class Kickboard {
     kickboards: (T extends true ? KickboardDoc : KickboardShort)[];
   }> {
     const query: any = [];
-    const { lat, lng, radius, status, franchiseIds } = await Joi.object({
+    const { lat, lng, radius, mode, franchiseIds } = await Joi.object({
       lat: Joi.number().min(-90).max(90).required(),
       lng: Joi.number().min(-180).max(180).required(),
-      status: Joi.array().items(Joi.number()).single().optional(),
+      mode: Joi.array().items(Joi.number()).single().optional(),
       radius: Joi.number().min(10).max(400000).default(1000).required(),
       franchiseIds: Joi.array().items(Joi.string().uuid()).optional(),
     }).validateAsync(props);
 
     const { low, high } = Geometry.getRect({ lat, lng, radius });
-    if (status) query.push(...KickboardQueryMode(...status));
+    if (mode) query.push(...KickboardQueryMode(...mode));
     if (franchiseIds) {
       query.push(...KickboardQueryKickboardFranchiseIds(franchiseIds));
     }

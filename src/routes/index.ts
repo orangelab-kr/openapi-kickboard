@@ -30,7 +30,7 @@ export function getRouter(): Router {
     Wrapper(async (req) => {
       const { query } = req;
       const { total, kickboards } = await Kickboard.getNearKickboards(
-        { ...query, status: [KickboardMode.READY] },
+        { ...query, mode: [KickboardMode.READY] },
         false
       );
 
