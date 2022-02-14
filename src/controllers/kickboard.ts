@@ -270,7 +270,10 @@ export class Kickboard {
       franchiseId: Joi.string().uuid().optional(),
       regionId: Joi.string().uuid().optional(),
       helmetId: Joi.string().allow(null).optional(),
-      mode: Joi.number().min(0).max(5).optional(),
+      mode: Joi.number()
+        .min(0)
+        .max(Object.keys(KickboardMode).length + 1)
+        .optional(),
       lost: Joi.number().min(0).max(3).allow(null).optional(),
       collect: Joi.number().min(0).max(3).allow(null).optional(),
       photo: Joi.string().uri().allow(null).optional(),
