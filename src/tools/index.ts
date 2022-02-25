@@ -1,4 +1,5 @@
 export * from './clusterInfo';
+export * from './firestore';
 export * from './geometry';
 export * from './internalClient';
 export * from './joi';

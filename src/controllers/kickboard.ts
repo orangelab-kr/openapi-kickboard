@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import { KickboardClient, KickboardService } from 'kickboard-sdk';
-import { FilterQuery } from 'mongoose';
 import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
 import { Status } from '.';
 import {
@@ -24,6 +23,7 @@ import {
   KickboardQuerySearch,
   KickboardQuerySort,
   KickboardQueryToShort,
+  Legacy,
   logger,
   RESULT,
   StatusDoc,
@@ -285,7 +285,6 @@ export class Kickboard {
         .optional(),
     });
 
-    const obj = await schema.validateAsync(props);
     const {
       kickboardId,
       franchiseId,
@@ -296,7 +295,8 @@ export class Kickboard {
       collect,
       photo,
       maxSpeed,
-    } = obj;
+    } = await schema.validateAsync(props);
+
     const beforeKickboard = await Kickboard.getKickboardDoc(kickboardCode);
     if (helmetId) await Helmet.getHelmetOrThrow(helmetId);
     if (
@@ -306,8 +306,9 @@ export class Kickboard {
     ) {
       const hasKickboardId = await Kickboard.getKickboardDocById(kickboardId);
       if (hasKickboardId) {
+        const { kickboardCode } = hasKickboardId;
         throw RESULT.ALREADY_USING_KICKBOARD({
-          args: [kickboardId, hasKickboardId.kickboardCode],
+          args: [kickboardId, kickboardCode],
         });
       }
     }
@@ -341,6 +342,9 @@ export class Kickboard {
 
     if (beforeKickboard) {
       await KickboardModel.updateOne(where, data);
+      if (beforeKickboard.mode !== mode) {
+        await Legacy.changeMode(beforeKickboard, mode);
+      }
     } else {
       if (!kickboardId || !franchiseId || !regionId) {
         throw RESULT.REQUIRED_KICKBOARD_DATA();
