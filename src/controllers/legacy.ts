@@ -19,7 +19,7 @@ export class Legacy {
     }
 
     logger.info(
-      `Legacy / ${kickboardCode} 킥보드의 상태를 변경합니다. ${KickboardMode[mode]}(can_ride: ${ready}, deploy: ${deploy})`
+      `Legacy / ${kickboardCode} 킥보드의 상태를 변경합니다. ${KickboardMode[mode]}(can_ride: ${can_ride}, deploy: ${deploy})`
     );
 
     await this.kickCollection
