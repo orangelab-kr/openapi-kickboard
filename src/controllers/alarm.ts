@@ -1,4 +1,4 @@
-import { AlarmMode, KickboardClient } from 'kickboard-sdk';
+import { AlarmMode, KickboardClient } from '@hikick/kickboard-sdk';
 
 import { Joi } from '..';
 

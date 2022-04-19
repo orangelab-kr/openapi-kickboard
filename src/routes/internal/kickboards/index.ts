@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Packet } from 'kickboard-sdk';
+import { Packet } from '@hikick/kickboard-sdk';
 import {
   getInternalKickboardsAlarmRouter,
   getInternalKickboardsBatteryRouter,

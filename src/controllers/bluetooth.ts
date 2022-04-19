@@ -1,4 +1,4 @@
-import { KickboardClient } from 'kickboard-sdk';
+import { KickboardClient } from '@hikick/kickboard-sdk';
 
 export class Bluetooth {
   public static async bluetoothOn(

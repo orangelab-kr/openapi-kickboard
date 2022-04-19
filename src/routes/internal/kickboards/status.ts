@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PacketStatus } from 'kickboard-sdk';
+import { PacketStatus } from '@hikick/kickboard-sdk';
 import {
   InternalPermissionMiddleware,
   PERMISSION,

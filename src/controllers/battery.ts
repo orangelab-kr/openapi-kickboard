@@ -1,6 +1,6 @@
 import { BatteryDoc, BatteryModel, Tried } from '..';
 
-import { KickboardClient } from 'kickboard-sdk';
+import { KickboardClient } from '@hikick/kickboard-sdk';
 
 export class Battery {
   public static async getBattery(

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PacketBattery } from 'kickboard-sdk';
+import { PacketBattery } from '@hikick/kickboard-sdk';
 import {
   Battery,
   InternalPermissionMiddleware,

@@ -1,6 +1,6 @@
 import { ConfigDoc, ConfigModel, Tried } from '..';
 
-import { KickboardClient } from 'kickboard-sdk';
+import { KickboardClient } from '@hikick/kickboard-sdk';
 
 export class Config {
   public static async getConfig(

@@ -1,5 +1,5 @@
 import 'express';
-import { KickboardClient } from 'kickboard-sdk';
+import { KickboardClient } from '@hikick/kickboard-sdk';
 import {
   InternalPlatformAccessKey,
   InternalPlatformUser,

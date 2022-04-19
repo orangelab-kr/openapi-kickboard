@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PacketInfo } from 'kickboard-sdk';
+import { PacketInfo } from '@hikick/kickboard-sdk';
 import {
   Info,
   InternalPermissionMiddleware,

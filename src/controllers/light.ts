@@ -1,4 +1,4 @@
-import { KickboardClient, LightMode } from 'kickboard-sdk';
+import { KickboardClient, LightMode } from '@hikick/kickboard-sdk';
 
 import { Joi } from '..';
 

@@ -1,4 +1,4 @@
-import { BuzzerMode, KickboardClient } from 'kickboard-sdk';
+import { BuzzerMode, KickboardClient } from '@hikick/kickboard-sdk';
 
 import { Joi } from '..';
 

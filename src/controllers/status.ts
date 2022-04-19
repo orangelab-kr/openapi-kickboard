@@ -1,6 +1,6 @@
 import { Joi, StatusDoc, StatusModel, Tried } from '..';
 
-import { KickboardClient } from 'kickboard-sdk';
+import { KickboardClient } from '@hikick/kickboard-sdk';
 
 export class Status {
   public static async getStatus(

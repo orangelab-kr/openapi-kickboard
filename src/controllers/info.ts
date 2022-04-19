@@ -1,6 +1,6 @@
 import { InfoDoc, InfoModel, Tried } from '..';
 
-import { KickboardClient } from 'kickboard-sdk';
+import { KickboardClient } from '@hikick/kickboard-sdk';
 
 export class Info {
   public static async getInfo(kickboard: KickboardClient): Promise<InfoDoc> {

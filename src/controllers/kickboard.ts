@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { KickboardClient, KickboardService } from 'kickboard-sdk';
+import { KickboardClient, KickboardService } from '@hikick/kickboard-sdk';
 import { FranchisePermission, LocationPermission } from 'openapi-internal-sdk';
 import { Status } from '.';
 import {
