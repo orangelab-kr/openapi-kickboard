@@ -33,7 +33,7 @@ jobs:
           ECR_REPOSITORY: openapi-kickboard
         run: |
           export PACKAGE_VERSION=$(node -p 'require("./package.json").version')
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION --build-arg GITHUB_TOKEN=${{ secrets.PAT }} .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest-stage -t $ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION-stage --build-arg GITHUB_TOKEN=${{ secrets.PAT }} .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION && docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION"
 
@@ -56,7 +56,3 @@ jobs:
       - name: Logout of Amazon ECR
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
-
-      - name: Setup tmate session
-        if: always()
-        uses: mxschmitt/action-tmate@v3

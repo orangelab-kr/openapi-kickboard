@@ -56,7 +56,3 @@ jobs:
       - name: Logout of Amazon ECR
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
-
-      - name: Setup tmate session
-        if: always()
-        uses: mxschmitt/action-tmate@v3
