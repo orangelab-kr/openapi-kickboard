@@ -27,11 +27,12 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: openapi-kickboard
         run: |
           export PACKAGE_VERSION=$(node -p 'require("./package.json").version')
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION --build-arg GITHUB_TOKEN=$GITHUB_TOKEN .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION && docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$PACKAGE_VERSION"
 
