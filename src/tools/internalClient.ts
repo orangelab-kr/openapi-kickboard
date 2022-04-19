@@ -11,7 +11,7 @@ import {
   LocationPermission,
   PlatformPermission,
   RidePermission,
-} from 'openapi-internal-sdk';
+} from '@hikick/openapi-internal-sdk';
 
 export function getDiscount(
   permissions?: DiscountPermission[],

@@ -1,4 +1,4 @@
-import { PlatformPermission } from 'openapi-internal-sdk';
+import { PlatformPermission } from '@hikick/openapi-internal-sdk';
 import { getPlatform, Wrapper, WrapperCallback } from '..';
 
 export function PlatformMiddleware(

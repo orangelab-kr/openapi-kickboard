@@ -3,7 +3,7 @@ import { KickboardClient } from '@hikick/kickboard-sdk';
 import {
   InternalPlatformAccessKey,
   InternalPlatformUser,
-} from 'openapi-internal-sdk';
+} from '@hikick/openapi-internal-sdk';
 import { KickboardDoc } from '..';
 
 declare global {
