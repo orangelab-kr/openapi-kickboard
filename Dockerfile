@@ -1,8 +1,6 @@
 FROM node:16-alpine
 ARG GITHUB_TOKEN
 
-RUN echo ${GITHUB_TOKEN}
-
 COPY . /app
 WORKDIR /app
 RUN apk --no-cache add tzdata && \
