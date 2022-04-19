@@ -1,15 +1,13 @@
-FROM node:14-alpine
-ARG CODEARTIFACT_AUTH_TOKEN
+FROM node:16-alpine
+ARG GITHUB_TOKEN
 
 COPY . /app
 WORKDIR /app
-RUN  apk --no-cache add tzdata && \
+RUN apk --no-cache add tzdata && \
   cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
   echo "Asia/Seoul" > /etc/timezone && \
-  yarn --prod=false && \
-  yarn build && \
-  yarn --prod=true && \
-  rm -rf src && \
-  rm -rf .npmrc
+  npm config set 'https://npm.pkg.github.com/:_authToken' ${GITHUB_TOKEN} && \
+  yarn --prod=false && yarn build && \
+  yarn --prod=true && rm -rf src ~/.npmrc
 
 CMD yarn start
