@@ -73,6 +73,16 @@ export function getInternalKickboardsRouter() {
     })
   );
 
+  router.post(
+    '/qrcode',
+    InternalPermissionMiddleware(PERMISSION.KICKBOARD_LOOKUP_DETAIL),
+    Wrapper(async (req) => {
+      const { url } = req.body;
+      const kickboardCode = await Kickboard.getKickboardCodeByQrcode(url);
+      throw RESULT.SUCCESS({ details: { kickboardCode } });
+    })
+  );
+
   router.get(
     '/:kickboardCode',
     InternalPermissionMiddleware(PERMISSION.KICKBOARD_LOOKUP_DETAIL),

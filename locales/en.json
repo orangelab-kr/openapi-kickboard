@@ -12,5 +12,6 @@
   "ALREADY_USING_KICKBOARD": "The %s kickboard is already in use by %s.",
   "CANNOT_SET_KICKBOARD": "You cannot register or edit a kickboard.",
   "REQUIRED_KICKBOARD_DATA": "Both your kickboard ID, franchise ID and local ID are required.",
-  "HELMET_HAS_KICKBOARD": "The helmet is linked to the kickboard."
+  "HELMET_HAS_KICKBOARD": "The helmet is linked to the kickboard.",
+  "INVALID_QRCODE": "Qrcode is not valid."
 }

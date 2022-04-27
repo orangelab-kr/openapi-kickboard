@@ -4,6 +4,7 @@ import {
   FranchisePermission,
   LocationPermission,
 } from '@hikick/openapi-internal-sdk';
+import superagent from 'superagent';
 import { Status } from '.';
 import {
   Geometry,
@@ -106,6 +107,15 @@ export class Kickboard {
       battery: power.scooter.battery,
       createdAt,
     }));
+  }
+
+  public static async getKickboardCodeByQrcode(url: string): Promise<string> {
+    const { redirects } = await superagent(url);
+    const redirectUrl = redirects[redirects.length - 1];
+    const { searchParams } = new URL(redirectUrl);
+    const kickboardCode = searchParams.get('code');
+    if (!kickboardCode) throw RESULT.INVALID_API();
+    return kickboardCode;
   }
 
   public static async getKickboard<T extends true | false>(

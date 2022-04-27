@@ -38,6 +38,16 @@ export function getRouter(): Router {
     })
   );
 
+  router.post(
+    '/qrcode',
+    PlatformMiddleware({ permissionIds: ['kickboards.view'], final: true }),
+    Wrapper(async (req) => {
+      const { url } = req.body;
+      const kickboardCode = await Kickboard.getKickboardCodeByQrcode(url);
+      throw RESULT.SUCCESS({ details: { kickboardCode } });
+    })
+  );
+
   router.get(
     '/:kickboardCode',
     PlatformMiddleware({ permissionIds: ['kickboards.view'], final: true }),

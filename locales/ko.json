@@ -12,5 +12,6 @@
   "ALREADY_USING_KICKBOARD": "%s 킥보드는 이미 %s가 사용하고 있습니다.",
   "CANNOT_SET_KICKBOARD": "킥보드를 등록하거나 수정할 수 없습니다.",
   "REQUIRED_KICKBOARD_DATA": "킥보드 ID와 프렌차이즈 ID, 지역 ID 모두 필요합니다.",
-  "HELMET_HAS_KICKBOARD": "헬멧이 킥보드와 연동되어 있습니다."
+  "HELMET_HAS_KICKBOARD": "헬멧이 킥보드와 연동되어 있습니다.",
+  "INVALID_QRCODE": "큐알코드가 올바르지 않습니다."
 }
