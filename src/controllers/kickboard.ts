@@ -110,12 +110,16 @@ export class Kickboard {
   }
 
   public static async getKickboardCodeByQrcode(url: string): Promise<string> {
-    const { redirects } = await superagent(url);
-    const redirectUrl = redirects[redirects.length - 1];
-    const { searchParams } = new URL(redirectUrl);
-    const kickboardCode = searchParams.get('code');
-    if (!kickboardCode) throw RESULT.INVALID_API();
-    return kickboardCode;
+    try {
+      const { redirects } = await superagent(url);
+      const redirectUrl = redirects[redirects.length - 1];
+      const { searchParams } = new URL(redirectUrl);
+      const kickboardCode = searchParams.get('code');
+      if (!kickboardCode) throw RESULT.INVALID_QRCODE();
+      return kickboardCode;
+    } catch (err) {
+      throw RESULT.INVALID_QRCODE();
+    }
   }
 
   public static async getKickboard<T extends true | false>(
