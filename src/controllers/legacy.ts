@@ -12,7 +12,7 @@ export class Legacy {
     const { can_ride, deploy, problem } = this.getFirebaseUpdates(mode);
     if (process.env.NODE_ENV !== 'prod') {
       logger.info(
-        `Legacy / ${kickboardCode} 킥보드의 상태가 변경되었지만 프로덕트가 아니람 무시합니다. ${KickboardMode[mode]}(can_ride: ${can_ride}, deploy: ${deploy}, problem: ${problem})`
+        `Legacy / ${kickboardCode} 킥보드의 상태가 변경되었지만 프로덕트가 아니라 무시합니다. ${KickboardMode[mode]}(can_ride: ${can_ride}, deploy: ${deploy}, problem: ${problem})`
       );
 
       return;
